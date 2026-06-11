@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMB Académie — Les Ambitieuses | Devenir Setteuse & Assistante Virtuelle</title>
+  <meta name="description" content="Génère 1 400 à 3 000€/mois depuis chez toi grâce au setting et à l'assistanat virtuel. Découvre l'AMB Académie fondée par Sarah.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════
+       VARIABLES
+    ═══════════════════════════════════════════ */
+    :root {
+      --rose:        #D4537E;
+      --rose-light:  #FBEAF0;
+      --rose-dark:   #72243E;
+      --rose-mid:    #993556;
+      --cream:       #FAF7F2;
+      --beige:       #EDE8E0;
+      --text-dark:   #1A1614;
+      --text-mid:    #5C4F47;
+      --text-soft:   #9E8E84;
+      --white:       #FFFFFF;
+      --border:      rgba(212,83,126,0.15);
+
+      --shadow-sm:   0 1px 8px rgba(26,22,20,0.06);
+      --shadow-md:   0 2px 16px rgba(26,22,20,0.08);
+      --shadow-rose: 0 4px 20px rgba(212,83,126,0.28);
+      --shadow-hover:0 8px 32px rgba(212,83,126,0.16);
+
+      --font-title:  'Cormorant Garamond', Georgia, serif;
+      --font-body:   'DM Sans', system-ui, sans-serif;
+
+      --text-h1:   clamp(2rem, 9vw, 3.25rem);
+      --text-h2:   clamp(1.6rem, 6.5vw, 2.5rem);
+      --text-h3:   clamp(1.2rem, 4vw, 1.4rem);
+      --text-body: clamp(0.875rem, 3.5vw, 0.9375rem);
+
+      --pad-x:     16px;
+      --pad-sec:   48px;
+      --radius:    14px;
+      --pill:      100px;
+      --max-w:     680px;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESET
+    ═══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      font-size: var(--text-body);
+      line-height: 1.65;
+      background: var(--cream);
+      color: var(--text-dark);
+      -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT
+    ═══════════════════════════════════════════ */
+    .wrap {
+      max-width: var(--max-w);
+      margin-inline: auto;
+      padding-inline: var(--pad-x);
+    }
+    .section { padding-block: var(--pad-sec); }
+    .divider { border: none; border-top: 1px solid var(--border); }
+
+    /* ═══════════════════════════════════════════
+       TYPOGRAPHIE
+    ═══════════════════════════════════════════ */
+    h1 {
+      font-family: var(--font-title);
+      font-size: var(--text-h1);
+      font-weight: 600;
+      line-height: 1.13;
+      letter-spacing: -0.01em;
+      color: var(--text-dark);
+    }
+    h2 {
+      font-family: var(--font-title);
+      font-size: var(--text-h2);
+      font-weight: 600;
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      color: var(--text-dark);
+    }
+    h3 {
+      font-family: var(--font-title);
+      font-size: var(--text-h3);
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--text-dark);
+    }
+    .subtitle {
+      font-size: var(--text-body);
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin-top: 12px;
+    }
+    .eyebrow {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--rose-mid);
+      background: var(--rose-light);
+      border: 1px solid var(--border);
+      border-radius: var(--pill);
+      padding: 5px 13px;
+      margin-bottom: 14px;
+    }
+    .eyebrow--muted { background: var(--beige); color: var(--text-soft); border-color: transparent; }
+
+    /* ═══════════════════════════════════════════
+       ANIMATIONS
+    ═══════════════════════════════════════════ */
+    @media (prefers-reduced-motion: no-preference) {
+      .fade-up {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.55s ease, transform 0.55s ease;
+      }
+      .fade-up.in { opacity: 1; transform: none; }
+
+      .stagger > * {
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity 0.45s ease, transform 0.45s ease;
+      }
+      .stagger.in > *               { opacity: 1; transform: none; }
+      .stagger.in > *:nth-child(1)  { transition-delay:   0ms; }
+      .stagger.in > *:nth-child(2)  { transition-delay:  80ms; }
+      .stagger.in > *:nth-child(3)  { transition-delay: 160ms; }
+      .stagger.in > *:nth-child(4)  { transition-delay: 240ms; }
+    }
+
+    /* ═══════════════════════════════════════════
+       BARRE DE PROGRESSION
+    ═══════════════════════════════════════════ */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--rose), var(--rose-dark));
+      z-index: 1000;
+      transition: width 0.1s linear;
+      border-radius: 0 2px 2px 0;
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════════════════
+       CTA STICKY
+    ═══════════════════════════════════════════ */
+    #sticky-cta {
+      position: fixed;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      z-index: 900;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      max-width: calc(100vw - 32px);
+    }
+    #sticky-cta.in {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+    #sticky-cta a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--rose), var(--rose-dark));
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 13px 24px;
+      min-height: 48px;
+      border-radius: var(--pill);
+      box-shadow: var(--shadow-rose), 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #sticky-cta a:active { transform: scale(0.97); }
+
+    /* ═══════════════════════════════════════════
+       BOUTON RETOUR EN HAUT
+    ═══════════════════════════════════════════ */
+    #back-to-top {
+      position: fixed;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      right: 16px;
+      width: 44px; height: 44px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      box-shadow: var(--shadow-md);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      z-index: 800;
+    }
+    #back-to-top.in { opacity: 1; transform: none; pointer-events: auto; }
+    #back-to-top:active { background: var(--rose-light); }
+    #back-to-top svg { width: 16px; height: 16px; color: var(--rose); }
+
+    /* ═══════════════════════════════════════════
+       BARRE D'URGENCE
+    ═══════════════════════════════════════════ */
+    .urgency-bar {
+      background: linear-gradient(90deg, var(--rose-dark), #8B2D4A);
+      color: var(--white);
+      text-align: center;
+      padding: 10px var(--pad-x);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+    .urgency-bar strong { color: #FFD4E3; }
+    .urgency-bar .sep { opacity: 0.5; margin: 0 6px; }
+
+    /* ═══════════════════════════════════════════
+       BOUTONS
+    ═══════════════════════════════════════════ */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: var(--pill);
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 500;
+      text-decoration: none;
+      text-align: center;
+      min-height: 52px;
+      padding: 0 28px;
+      font-size: 15px;
+      width: 100%;
+      transition: transform 0.18s, box-shadow 0.18s, filter 0.18s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-rose {
+      background: linear-gradient(135deg, var(--rose), #BF3D68);
+      color: var(--white);
+      box-shadow: var(--shadow-rose);
+    }
+    .btn-rose:active { filter: brightness(0.95); }
+    .btn-dark {
+      background: linear-gradient(135deg, var(--rose-dark), #5A1C30);
+      color: var(--white);
+      box-shadow: 0 4px 18px rgba(114,36,62,0.32);
+    }
+
+    @media (hover: hover) {
+      .btn-rose:hover   { filter: brightness(1.06); box-shadow: 0 8px 28px rgba(212,83,126,0.42); transform: scale(1.02); }
+      .btn-dark:hover   { filter: brightness(1.08); box-shadow: 0 8px 28px rgba(114,36,62,0.42); transform: scale(1.02); }
+      #sticky-cta a:hover { transform: scale(1.03); }
+    }
+
+    /* ═══════════════════════════════════════════
+       CARDS
+    ═══════════════════════════════════════════ */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-rose { background: var(--rose-light); border-color: rgba(212,83,126,0.25); }
+
+    @media (hover: hover) {
+      .card-hover { transition: box-shadow 0.25s, transform 0.25s; }
+      .card-hover:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+    }
+
+    /* ═══════════════════════════════════════════
+       PATTERN INTERRUPT
+    ═══════════════════════════════════════════ */
+    .pattern-interrupt {
+      background: var(--white);
+      border-left: 3px solid var(--rose);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 14px;
+      margin: 16px 0;
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.65;
+      box-shadow: var(--shadow-sm);
+    }
+    .pattern-interrupt strong {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--rose-mid);
+      margin-bottom: 4px;
+    }
+
+    /* ═══════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════ */
+    #hero {
+      background:
+        radial-gradient(ellipse 120% 55% at 50% -5%, rgba(212,83,126,0.08) 0%, transparent 65%),
+        var(--cream);
+      padding: 28px var(--pad-x) var(--pad-sec);
+      overflow: hidden;
+    }
+    .hero-logo {
+      text-align: center;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: center;
+    }
+    .hero-logo img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+    }
+    @media (min-width: 1024px) {
+      .hero-logo img { width: 180px; height: 180px; }
+    }
+    .hero-photo {
+      aspect-ratio: 3 / 4;
+      max-height: 520px;
+      margin: 24px 0;
+      overflow: hidden;
+      border-radius: var(--radius);
+    }
+
+    /* ═══════════════════════════════════════════
+       ABOUT SARAH
+    ═══════════════════════════════════════════ */
+    #about { background: var(--white); }
+    .about-layout { display: flex; flex-direction: column; gap: 20px; }
+    .about-avatar {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-md);
+    }
+    .about-label {
+      display: block;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.09em; text-transform: uppercase;
+      color: var(--rose); margin-bottom: 6px;
+    }
+    .about-body { font-size: 14px; color: var(--text-mid); line-height: 1.8; margin-top: 10px; }
+    .about-body p + p { margin-top: 10px; }
+
+    .about-moment {
+      background: linear-gradient(135deg, var(--rose-light), #F5D5E5);
+      border: 1px solid rgba(212,83,126,0.2);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 14px 0;
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+    .about-moment strong {
+      color: var(--rose-dark);
+      display: block;
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 0.07em; margin-bottom: 5px;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .about-stat {
+      background: linear-gradient(145deg, var(--beige), #E8E2D8);
+      border-radius: 12px;
+      padding: 14px 6px;
+      text-align: center;
+    }
+    .about-stat__n {
+      font-family: var(--font-title);
+      font-size: clamp(1.3rem, 5vw, 1.75rem);
+      font-weight: 600;
+      color: var(--rose);
+      line-height: 1;
+    }
+    .about-stat__l { font-size: 10px; color: var(--text-soft); margin-top: 4px; line-height: 1.4; }
+
+    /* ═══════════════════════════════════════════
+       VIDÉO
+    ═══════════════════════════════════════════ */
+    #video-1 { background: var(--cream); }
+    #income   { background: var(--white); }
+
+    .pull-quote {
+      border-left: 3px solid var(--rose);
+      padding: 4px 0 4px 18px;
+      margin: 24px 0;
+      font-family: var(--font-title);
+      font-style: italic;
+      font-size: clamp(1rem, 4vw, 1.2rem);
+      color: var(--text-dark);
+      line-height: 1.55;
+    }
+    .pull-quote cite {
+      display: block;
+      font-size: 12px;
+      font-family: var(--font-body);
+      font-style: normal;
+      color: var(--text-soft);
+      margin-top: 7px;
+    }
+
+    .reason-list { display: flex; flex-direction: column; gap: 8px; }
+    .reason-item {
+      display: flex; gap: 12px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .reason-dot {
+      width: 7px; height: 7px;
+      background: var(--rose); border-radius: 50%;
+      flex-shrink: 0; margin-top: 7px;
+    }
+    .reason-title { font-size: 13px; font-weight: 500; color: var(--text-dark); margin-bottom: 3px; }
+    .reason-text  { font-size: 12px; color: var(--text-mid); line-height: 1.6; }
+
+    @media (hover: hover) {
+      .reason-item { transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s; }
+      .reason-item:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); border-color: rgba(212,83,126,0.28); }
+    }
+
+    /* ═══════════════════════════════════════════
+       REVENUS
+    ═══════════════════════════════════════════ */
+    .income-label {
+      font-size: 14px; font-weight: 500;
+      color: var(--text-dark); text-align: center;
+      margin: 28px 0 14px;
+    }
+    .income-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .income-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 18px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .income-card--hl {
+      border: 2px solid var(--rose);
+      background: linear-gradient(145deg, var(--rose-light), #F5D5E5);
+      order: -1;
+    }
+    .income-card__left { flex: 1; }
+    .income-card__badge {
+      display: inline-block;
+      font-size: 10px; font-weight: 500;
+      padding: 2px 9px;
+      border-radius: var(--pill);
+      background: var(--beige);
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+    .income-card--hl .income-card__badge {
+      background: rgba(255,255,255,0.55);
+      color: var(--rose-mid);
+      border: 1px solid rgba(212,83,126,0.28);
+    }
+    .income-card__obj {
+      font-size: 10px; font-weight: 500;
+      color: var(--rose); text-transform: uppercase;
+      letter-spacing: 0.04em; margin-bottom: 4px;
+    }
+    .income-card__amount {
+      font-family: var(--font-title);
+      font-size: clamp(1.25rem, 5vw, 1.5rem);
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.1;
+    }
+    .income-card--hl .income-card__amount { color: var(--rose-dark); }
+    .income-card__sub { font-size: 11px; color: var(--text-soft); margin-top: 3px; }
+    .income-card__arrow { font-size: 20px; color: var(--rose); opacity: 0.5; flex-shrink: 0; }
+    .income-card--hl .income-card__arrow { opacity: 1; }
+
+    /* ═══════════════════════════════════════════
+       FAQ
+    ═══════════════════════════════════════════ */
+    #faq { background: var(--white); }
+    .faq-list { margin-top: 20px; border-top: 0.5px solid var(--border); }
+    .faq-item { border-bottom: 0.5px solid var(--border); }
+    .faq-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 14px;
+      padding: 16px 0;
+      min-height: 44px;
+      cursor: pointer;
+      background: none; border: none; width: 100%; text-align: left;
+    }
+    .faq-btn:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; border-radius: 4px; }
+    .faq-q {
+      font-size: 14px; font-weight: 500;
+      color: var(--text-dark); line-height: 1.4;
+      transition: color 0.18s;
+    }
+    .faq-chevron {
+      width: 20px; height: 20px; flex-shrink: 0;
+      color: var(--rose);
+      transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    }
+    .faq-item.open .faq-chevron { transform: rotate(90deg); }
+    .faq-item.open .faq-q { color: var(--rose-dark); }
+    .faq-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .faq-item.open .faq-body { max-height: 600px; }
+    .faq-ans {
+      font-size: 14px; color: var(--text-mid);
+      line-height: 1.75; padding: 0 24px 16px 0;
+    }
+    .no-js .faq-body { max-height: none; }
+
+    /* ═══════════════════════════════════════════
+       CTA FINAL
+    ═══════════════════════════════════════════ */
+    #cta {
+      background:
+        radial-gradient(ellipse 80% 45% at 50% 105%, rgba(212,83,126,0.07) 0%, transparent 65%),
+        var(--cream);
+      padding-block: 56px;
+    }
+    #cta h2, #cta .subtitle { text-align: center; }
+
+    .reassurance-pills {
+      display: flex; flex-wrap: wrap;
+      gap: 8px; justify-content: center;
+      margin: 18px 0 28px;
+    }
+    .r-pill {
+      font-size: 12px; font-weight: 500;
+      color: var(--rose-dark);
+      background: var(--white);
+      border: 1px solid rgba(212,83,126,0.22);
+      border-radius: var(--pill);
+      padding: 7px 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .calendly-wrap {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .signature {
+      text-align: center; font-size: 13px;
+      color: var(--text-soft); margin-top: 24px; line-height: 1.65;
+    }
+    .signature em { display: block; font-style: normal; color: var(--rose-mid); font-weight: 500; margin-top: 3px; }
+    .final-quote {
+      font-family: var(--font-title); font-style: italic;
+      font-size: clamp(1.05rem, 4vw, 1.25rem);
+      color: var(--rose-dark); line-height: 1.5;
+      text-align: center; margin-top: 32px;
+      padding: 24px 0 0;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ═══════════════════════════════════════════
+       ÉTAPE 2 — CALENDLY INTERMÉDIAIRE
+    ═══════════════════════════════════════════ */
+    #step2 { background: var(--cream); }
+    .step2-intro {
+      background: linear-gradient(135deg, var(--rose-light), #F5D5E5);
+      border: 1px solid rgba(212,83,126,0.22);
+      border-radius: var(--radius);
+      padding: 24px 16px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .step2-intro p {
+      font-family: var(--font-title);
+      font-style: italic;
+      font-size: clamp(0.95rem, 3.5vw, 1.1rem);
+      color: var(--text-mid);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    footer {
+      background: var(--text-dark);
+      color: var(--text-soft);
+      text-align: center;
+      padding: 24px var(--pad-x);
+      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      font-size: 12px; line-height: 1.7;
+    }
+    footer a { color: var(--text-soft); text-decoration: underline; text-underline-offset: 2px; }
+    .footer-links { display: flex; gap: 18px; justify-content: center; margin-top: 6px; flex-wrap: wrap; }
+
+    /* ═══════════════════════════════════════════
+       BREAKPOINTS
+    ═══════════════════════════════════════════ */
+    @media (min-width: 480px) {
+      :root { --pad-x: 20px; }
+      .income-grid { grid-template-columns: 1fr 1fr; }
+      .income-card--hl { grid-column: 1 / -1; order: 0; }
+    }
+    @media (min-width: 640px) {
+      :root { --pad-sec: 64px; }
+      .income-grid { grid-template-columns: repeat(3, 1fr); }
+      .income-card { flex-direction: column; align-items: flex-start; }
+      .income-card--hl { grid-column: auto; order: 0; }
+      .income-card__arrow { display: none; }
+      .about-layout { flex-direction: row; align-items: flex-start; gap: 28px; }
+      .about-avatar { width: 120px; height: 120px; border-radius: 50%; }
+    }
+    @media (min-width: 1024px) {
+      :root { --pad-x: 40px; --pad-sec: 88px; }
+    }
+
+    /* ═══════════════════════════════════════════
+       ACCESSIBILITÉ
+    ═══════════════════════════════════════════ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration:  0.01ms !important;
+      }
+    }
+    :focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+  </style>
+
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "x0jj09tqk7");
+  </script>
+
+  <!-- Facebook Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1324606929887123');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1324606929887123&ev=PageView&noscript=1" alt=""/></noscript>
+</head>
+
+<body class="no-js">
+
+  <div id="progress-bar" role="progressbar" aria-hidden="true"></div>
+
+  <div id="sticky-cta" aria-hidden="true">
+    <a href="https://calendly.com/lesambitieuses/as?" target="_blank" rel="noopener noreferrer" tabindex="-1">Plus de questions ? Réserve ton appel gratuit →</a>
+  </div>
+
+  <button id="back-to-top" aria-label="Revenir en haut de page" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  </button>
+
+  <!-- BARRE D'URGENCE -->
+  <div class="urgency-bar">
+    <strong>3 places restantes ce mois-ci</strong>
+    <span class="sep">·</span>
+    Prochain live lundi — les nouvelles élèves y participent dès l'inscription
+  </div>
+
+  <!-- ══ BLOC 1 — HERO ══════════════════════════════════════════════════ -->
+  <section id="hero" aria-label="Introduction">
+    <div class="wrap">
+
+      <div class="hero-logo fade-up" style="background:none;border:none;box-shadow:none;padding:0;">
+        <img src="logo-amb.png" alt="AMB Académie — Les Ambitieuses" style="width:100px;height:100px;object-fit:contain;display:block;margin:0 auto;">
+      </div>
+
+      <h1 class="fade-up" style="margin-top:20px;">
+        1 400 à 3 000 €/mois depuis chez toi — voici exactement comment d'autres femmes comme toi y sont arrivées.
+      </h1>
+
+      <p class="subtitle fade-up">
+        Je m'appelle Sarah. Je t'apprends le métier qui m'a permis de vivre à Bali, de travailler 5h/jour, et de ne plus jamais dépendre d'un employeur.
+      </p>
+
+      <div class="pattern-interrupt fade-up">
+        <strong>Soyons honnêtes</strong>
+        Non, tu ne vas pas générer 3 000€ le mois prochain en regardant des vidéos. Ce métier demande du travail, de la régularité, et de vraiment t'y mettre. Ce que je t'apporte, c'est la méthode, le réseau et le suivi pour que cet effort mène quelque part — rapidement.
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ BLOC 2 — ABOUT SARAH ═══════════════════════════════════════════ -->
+  <section id="about" class="section" aria-label="À propos de Sarah">
+    <div class="wrap">
+
+      <span class="eyebrow eyebrow--muted fade-up">Avant de te parler du métier</span>
+
+      <div class="about-layout fade-up">
+        <div class="about-avatar">
+          <img
+            src="sarah-phone.png"
+            alt="Sarah tenant son téléphone avec l'interface AMB Académie"
+            loading="lazy"
+            decoding="async"
+            style="width:100%;height:100%;object-fit:cover;object-position:center 20%;border-radius:inherit;"
+          >
+        </div>
+        <div>
+          <span class="about-label">Fondatrice · AMB Académie</span>
+          <h2 style="font-size:clamp(1.4rem,5.5vw,1.75rem);">Hey, moi c'est Sarah.</h2>
+          <div class="about-body">
+            <p>Bon emploi sur le papier, mal payée dans les faits. Pas d'argent de côté. J'ai quand même investi dans une formation en ligne en me mettant dans le rouge. C'est la décision qui a tout changé.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-moment fade-up">
+        <strong>Le déclic</strong>
+        Ma patronne m'a un jour demandé de la prévenir si je quittais la région pendant mes congés. Mes congés — pas les siens. Ce jour-là, j'ai compris que j'étais une employée avant d'être une personne. J'ai mis presque un an à générer mes premiers 1 400€/mois — parce que j'apprenais seule, sans méthode. Aujourd'hui mes élèves y arrivent en 2 mois.
+      </div>
+
+      <div class="about-body fade-up">
+        <p>Aujourd'hui je vis à Bali. Je génère 3 à 6K€/mois, je travaille depuis ma terrasse avec vue sur les rizières, et j'ai formé 42 femmes à créer la même liberté depuis zéro.</p>
+        <p>Je ne suis pas là pour te vendre du rêve. Je suis là pour te montrer exactement ce que j'ai fait — et ce que tu peux faire aussi.</p>
+      </div>
+
+      <div class="about-stats stagger" aria-label="Résultats de Sarah">
+        <div class="about-stat"><div class="about-stat__n">4 ans+</div><div class="about-stat__l">à mon compte</div></div>
+        <div class="about-stat"><div class="about-stat__n">3–6K€</div><div class="about-stat__l">par mois</div></div>
+        <div class="about-stat"><div class="about-stat__n">5h/j</div><div class="about-stat__l">max de travail</div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ BLOC 3 — ÉTAPE 1 ════════════════════════════════════════════════ -->
+  <section id="video-1" class="section" aria-label="Vidéo de présentation">
+    <div class="wrap">
+
+      <span class="eyebrow eyebrow--muted fade-up">Étape 1 — Commence ici</span>
+      <h2 class="fade-up">Ce métier est-il vraiment fait pour toi ?</h2>
+      <p class="subtitle fade-up">Dans cette vidéo, je te raconte mon histoire sans filtre — et pourquoi je suis convaincue que tu peux faire pareil.</p>
+
+      <div class="fade-up yt-wrap" style="position:relative;width:100%;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-md);cursor:pointer;background:#000;" onclick="this.innerHTML='<iframe src=\'https://www.youtube.com/embed/qcmouNqu_Ys?autoplay=1\' allow=\'autoplay;encrypted-media\' allowfullscreen style=\'width:100%;aspect-ratio:16/9;border:none;display:block;\'></iframe>'">
+        <img src="https://img.youtube.com/vi/qcmouNqu_Ys/maxresdefault.jpg" alt="Vidéo — Ce métier est-il fait pour toi ?" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.15);">
+          <div style="width:64px;height:64px;background:rgba(255,255,255,0.95);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><polygon points="8,5 19,12 8,19" fill="#D4537E"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <blockquote class="pull-quote fade-up">
+        J'aurais gagné 6 mois si quelqu'un m'avait montré exactement quoi faire dès le début. C'est exactement pour ça que j'ai créé l'académie.
+        <cite>— Sarah, fondatrice AMB Académie</cite>
+      </blockquote>
+
+      <p class="fade-up" style="font-size:14px;font-weight:500;color:var(--text-dark);margin-bottom:12px;">Le marché est prêt. La question : est-ce que toi tu l'es ?</p>
+
+      <div class="reason-list fade-up" role="list">
+        <article class="reason-item" role="listitem">
+          <div class="reason-dot" aria-hidden="true"></div>
+          <div><p class="reason-title">Flexibilité totale</p><p class="reason-text">Tu travailles d'où tu veux, quand tu veux. Bali, Paris, ta chambre. Ton bureau c'est ton téléphone.</p></div>
+        </article>
+        <article class="reason-item" role="listitem">
+          <div class="reason-dot" aria-hidden="true"></div>
+          <div><p class="reason-title">Plusieurs clients en parallèle</p><p class="reason-text">Tu multiplies tes revenus sans jamais dépendre d'un seul employeur. Tu choisis tes missions, tu évolues à ton rythme.</p></div>
+        </article>
+        <article class="reason-item" role="listitem">
+          <div class="reason-dot" aria-hidden="true"></div>
+          <div><p class="reason-title">Accessible sans diplôme</p><p class="reason-text">Organisation, communication, relationnel — tu as déjà les bases. On t'apporte la méthode pour les monétiser.</p></div>
+        </article>
+        <article class="reason-item" role="listitem">
+          <div class="reason-dot" aria-hidden="true"></div>
+          <div><p class="reason-title">Stabilité &amp; long terme</p><p class="reason-text">Contrats récurrents, bouche-à-oreille, évolution vers Closer ou Manager Setting.</p></div>
+        </article>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ BLOC 4 — ÉTAPE 2 ════════════════════════════════════════════════ -->
+  <section id="income" class="section" aria-label="Coulisses et revenus concrets">
+    <div class="wrap">
+
+      <span class="eyebrow eyebrow--muted fade-up">Étape 2 — Vois la réalité du métier</span>
+      <h2 class="fade-up">Les coulisses — ma journée type, mes revenus, l'académie. Sans filtre.</h2>
+      <p class="subtitle fade-up">Pas de chiffres inventés. Pas de promesses de 10K en 3 semaines. La réalité crue.</p>
+
+      <div class="fade-up yt-wrap" style="position:relative;width:100%;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-md);cursor:pointer;background:#000;" onclick="this.innerHTML='<iframe src=\'https://www.youtube.com/embed/dn82DJkvH2I?autoplay=1\' allow=\'autoplay;encrypted-media\' allowfullscreen style=\'width:100%;aspect-ratio:16/9;border:none;display:block;\'></iframe>'">
+        <img src="https://img.youtube.com/vi/dn82DJkvH2I/hqdefault.jpg" alt="Vidéo — Les coulisses, mes revenus, sans filtre" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.15);">
+          <div style="width:64px;height:64px;background:rgba(255,255,255,0.95);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><polygon points="8,5 19,12 8,19" fill="#D4537E"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <p class="income-label fade-up">Ce que ce métier peut concrètement te rapporter</p>
+
+      <div class="income-grid stagger" aria-label="Grille de revenus">
+        <div class="income-card income-card--hl">
+          <div class="income-card__left">
+            <div class="income-card__obj">Objectif 90 jours</div>
+            <div class="income-card__badge">Confirmée</div>
+            <div class="income-card__amount">1 400–3 000 €</div>
+            <div class="income-card__sub">par mois · 1–2 clients</div>
+          </div>
+          <div class="income-card__arrow">★</div>
+        </div>
+        <div class="income-card">
+          <div class="income-card__left">
+            <div class="income-card__badge">Débutante</div>
+            <div class="income-card__amount">700–1 400 €</div>
+            <div class="income-card__sub">par mois · 1 client</div>
+          </div>
+          <div class="income-card__arrow">→</div>
+        </div>
+        <div class="income-card">
+          <div class="income-card__left">
+            <div class="income-card__badge">Experte</div>
+            <div class="income-card__amount">4 000 €+</div>
+            <div class="income-card__sub">par mois · spécialisation</div>
+          </div>
+          <div class="income-card__arrow">→</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ BLOC 6 — FAQ ═══════════════════════════════════════════════════ -->
+  <section id="faq" class="section" aria-label="Questions fréquentes">
+    <div class="wrap">
+
+      <h2 class="fade-up">Tu as des questions.<br>Voici les réponses honnêtes.</h2>
+
+      <div class="faq-list fade-up">
+
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" aria-controls="fa1" onclick="toggleFaq(this)">
+            <span class="faq-q">C'est quoi exactement le setting ?</span>
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="faq-body" id="fa1"><p class="faq-ans">Le setting, c'est qualifier et accompagner des prospects en DM pour le compte de coaches ou d'infopreneurs en ligne. Tu crées une vraie relation humaine avec leurs prospects, tu les aides à passer à l'action. C'est un métier profondément humain — pas juste administratif.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" aria-controls="fa2" onclick="toggleFaq(this)">
+            <span class="faq-q">Combien de temps par jour ça prend concrètement ?</span>
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="faq-body" id="fa2"><p class="faq-ans">La plupart de mes clientes travaillent 2 à 4h par jour, depuis leur téléphone. Certaines commencent à temps partiel avant de passer à plein temps. Tu construis ton emploi du temps autour de ta vie, pas l'inverse.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" aria-controls="fa3" onclick="toggleFaq(this)">
+            <span class="faq-q">Je n'ai aucune expérience — c'est quand même possible ?</span>
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="faq-body" id="fa3"><p class="faq-ans">C'est exactement pour ça que l'académie existe. Organisation, communication, relationnel — tu as déjà les bases. On t'apporte la méthode pour les monétiser professionnellement. Aucun BAC+5 requis.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" aria-controls="fa4" onclick="toggleFaq(this)">
+            <span class="faq-q">Comment je trouve mes premiers clients ?</span>
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="faq-body" id="fa4"><p class="faq-ans">Tu as deux leviers : le module acquisition clients (prospecter et convertir par toi-même) + les 40+ missions par mois via mon réseau. Tu ne pars pas de zéro — le réseau est déjà là.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" aria-controls="fa5" onclick="toggleFaq(this)">
+            <span class="faq-q">Combien coûte l'académie ?</span>
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="faq-body" id="fa5"><p class="faq-ans">On en parle directement à l'appel. Pas de prix affiché parce qu'il n'y a pas de formule standard — l'accompagnement est ajusté à ton profil. À l'appel, tu décides après, seule, chez toi.</p></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ BLOC 7 — CTA FINAL ════════════════════════════════════════════ -->
+  <section id="cta" aria-label="Réserver un appel stratégique">
+    <div class="wrap">
+
+      <h2 class="fade-up">Dans 6 mois, tu seras soit au même endroit — soit complètement ailleurs.</h2>
+      <p class="subtitle fade-up">Cet appel, c'est la différence. 45 minutes, gratuit, sans engagement. On fait le point sur ta situation et on voit ensemble ce qui est possible pour toi maintenant.</p>
+
+      <div class="reassurance-pills fade-up">
+        <span class="r-pill">✓ Appel gratuit</span>
+        <span class="r-pill">✓ 45 minutes</span>
+        <span class="r-pill">✓ Sans engagement</span>
+        <span class="r-pill">✓ Honnêteté totale</span>
+      </div>
+
+      <!-- Calendly embed -->
+      <div class="calendly-wrap fade-up" id="calendly">
+        <div class="calendly-inline-widget" data-url="https://calendly.com/lesambitieuses/as?" style="min-width:320px;height:630px;"></div>
+        <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+      </div>
+
+      <div class="signature fade-up">
+        Je prends soin de chaque femme que j'accompagne. Places limitées à 10 par mois.
+        <em>— Sarah, fondatrice AMB Académie</em>
+      </div>
+
+      <p class="final-quote fade-up">
+        « Les femmes qui changent leur vie ne sont pas différentes de toi.<br>
+        Elles ont juste décidé d'arrêter d'attendre. »
+      </p>
+
+    </div>
+  </section>
+
+  <footer>
+    <div>© 2025 AMB Académie — Les Ambitieuses · Document confidentiel</div>
+    <div class="footer-links">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+    </div>
+  </footer>
+
+  <script>
+    document.body.classList.remove('no-js');
+
+    // ── SCROLL : progress + sticky CTA + back-to-top ───────────────────
+    var bar       = document.getElementById('progress-bar');
+    var stickyCta = document.getElementById('sticky-cta');
+    var btt       = document.getElementById('back-to-top');
+    var hero      = document.getElementById('hero');
+    var ctaSec    = document.getElementById('cta');
+
+    function onScroll() {
+      var st  = window.scrollY;
+      var dh  = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (dh > 0 ? (st / dh * 100) : 0) + '%';
+
+      var heroBtm = hero   ? hero.getBoundingClientRect().bottom  : 0;
+      var ctaTop  = ctaSec ? ctaSec.getBoundingClientRect().top   : Infinity;
+      var show    = heroBtm < 0 && ctaTop > window.innerHeight;
+      stickyCta.classList.toggle('in', show);
+      stickyCta.querySelector('a').tabIndex = show ? 0 : -1;
+
+      btt.classList.toggle('in', st > 500);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // ── SCROLL ANIMATIONS ───────────────────────────────────────────────
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.fade-up, .stagger').forEach(function(el) { io.observe(el); });
+    }
+
+    // ── FAQ ACCORDION ───────────────────────────────────────────────────
+    function toggleFaq(btn) {
+      var item = btn.closest('.faq-item');
+      var body = btn.nextElementSibling;
+      var open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(o) {
+        o.classList.remove('open');
+        o.querySelector('.faq-btn').setAttribute('aria-expanded', 'false');
+        o.querySelector('.faq-body').style.maxHeight = '0';
+      });
+      if (!open) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    }
+
+    // ── SMOOTH SCROLL ───────────────────────────────────────────────────
+    document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        var t = document.getElementById(a.getAttribute('href').slice(1));
+        if (!t) return;
+        e.preventDefault();
+        t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+
+</body>
+</html>
