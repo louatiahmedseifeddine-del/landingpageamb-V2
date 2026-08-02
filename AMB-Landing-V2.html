@@ -681,8 +681,17 @@
     })(window, document, "clarity", "script", "x0jj09tqk7");
   </script>
 
-  <!-- Facebook Pixel -->
+  <!-- Meta Pixel -->
   <script>
+    // First-party external_id (persisted). Improves Advanced Matching and lets
+    // this browser Pixel event dedupe with the server-side CAPI event later.
+    function ambGetExternalId(){
+      try{
+        var k='amb_ext_id', v=localStorage.getItem(k);
+        if(!v){ v='amb_'+Date.now().toString(36)+Math.random().toString(36).slice(2,10); localStorage.setItem(k,v); }
+        return v;
+      }catch(e){ return null; }
+    }
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -691,11 +700,11 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1324606929887123');
+    fbq('init', '955572904130075', { external_id: ambGetExternalId() });
     fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1324606929887123&ev=PageView&noscript=1" alt=""/></noscript>
+    src="https://www.facebook.com/tr?id=955572904130075&ev=PageView&noscript=1" alt=""/></noscript>
 </head>
 
 <body class="no-js">
@@ -703,7 +712,7 @@
   <div id="progress-bar" role="progressbar" aria-hidden="true"></div>
 
   <div id="sticky-cta" aria-hidden="true">
-    <a href="https://calendly.com/lesambitieuses/as?" target="_blank" rel="noopener noreferrer" tabindex="-1">Plus de questions ? Réserve ton appel gratuit →</a>
+    <a href="#calendly" tabindex="-1">Plus de questions ? Réserve ton appel gratuit →</a>
   </div>
 
   <button id="back-to-top" aria-label="Revenir en haut de page" onclick="window.scrollTo({top:0,behavior:'smooth'})">
@@ -1047,6 +1056,114 @@
         t.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
+  </script>
+
+  <!-- ══ CONSENT — always-on cookie banner (hidden by default) ══════════ -->
+  <div id="cookie-banner" role="dialog" aria-live="polite" aria-label="Consentement aux cookies" hidden>
+    <p>Nous utilisons des cookies pour mesurer l'audience et améliorer ton expérience.</p>
+    <div class="cb-actions">
+      <button type="button" id="cb-accept">Accepter</button>
+      <button type="button" id="cb-refuse">Refuser</button>
+    </div>
+  </div>
+  <style>
+    #cookie-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;max-width:520px;margin:0 auto;background:#fff;color:#2b2b2b;border:1px solid rgba(0,0,0,.08);box-shadow:0 12px 40px rgba(0,0,0,.18);border-radius:16px;padding:16px 18px;font-size:.9rem;line-height:1.45}
+    #cookie-banner[hidden]{display:none}
+    #cookie-banner p{margin:0 0 12px}
+    #cookie-banner .cb-actions{display:flex;gap:10px;justify-content:flex-end}
+    #cookie-banner button{cursor:pointer;border-radius:999px;padding:8px 18px;font-size:.85rem;font-weight:600;border:1px solid transparent}
+    #cb-accept{background:var(--rose,#e75a7c);color:#fff}
+    #cb-refuse{background:transparent;color:#666;border-color:rgba(0,0,0,.15)}
+  </style>
+
+  <!-- ══ META PIXEL — CONSENT + CONVERSION EVENTS ══════════════════════ -->
+  <script>
+    (function(){
+      var CONSENT_KEY = 'amb_cookie_consent';
+
+      // ── CONSENT (always-on) ─────────────────────────────────────────
+      // Tracking is granted by default and the banner stays hidden. The
+      // banner lives in the DOM for transparency and can be shown on demand
+      // via window.ambShowCookieBanner().
+      function grantConsent(){
+        try { localStorage.setItem(CONSENT_KEY, 'granted'); } catch(e){}
+        if (typeof fbq === 'function') fbq('consent', 'grant');
+      }
+      function revokeConsent(){
+        try { localStorage.setItem(CONSENT_KEY, 'revoked'); } catch(e){}
+        if (typeof fbq === 'function') fbq('consent', 'revoke');
+      }
+      grantConsent();
+
+      var banner = document.getElementById('cookie-banner');
+      window.ambShowCookieBanner = function(){ if (banner) banner.hidden = false; };
+      var acc = document.getElementById('cb-accept');
+      var ref = document.getElementById('cb-refuse');
+      if (acc) acc.addEventListener('click', function(){ grantConsent(); if (banner) banner.hidden = true; });
+      if (ref) ref.addEventListener('click', function(){ revokeConsent(); if (banner) banner.hidden = true; });
+
+      // ── EVENT HELPERS ───────────────────────────────────────────────
+      function extId(){ return (typeof ambGetExternalId === 'function') ? ambGetExternalId() : null; }
+      function newId(name){
+        var r = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+              : (Date.now().toString(36) + Math.random().toString(36).slice(2));
+        return name + '_' + r;
+      }
+      function track(name, params, forcedId){
+        if (typeof fbq !== 'function') return null;
+        params = params || {};
+        var x = extId(); if (x) params.external_id = x;
+        var id = forcedId || newId(name);
+        fbq('track', name, params, { eventID: id });
+        return id;
+      }
+
+      // ── CTA CLICKS → intent (Contact) ───────────────────────────────
+      // Any CTA that jumps to the booking section, or a raw Calendly link.
+      document.addEventListener('click', function(e){
+        var a = e.target.closest ? e.target.closest('a[href]') : null;
+        if (!a) return;
+        var href = a.getAttribute('href') || '';
+        if (href.indexOf('calendly.com') !== -1 || href === '#calendly' || href === '#cta') {
+          track('Contact', { content_name: 'Clic réservation appel', content_category: 'Booking' });
+        }
+      }, true);
+
+      // ── CALENDLY (inline embed) → funnel + conversion events ─────────
+      function inviteeId(payload){
+        var uri = (payload && payload.invitee && payload.invitee.uri) || '';
+        var m = uri.match(/invitees\/([a-z0-9-]+)/i);
+        return m ? m[1] : null;
+      }
+      window.addEventListener('message', function(e){
+        var d = e.data;
+        if (!d || typeof d.event !== 'string' || d.event.indexOf('calendly.') !== 0) return;
+        var payload = d.payload || {};
+        switch (d.event) {
+          case 'calendly.event_type_viewed':
+            track('ViewContent', { content_name: 'Calendly — Appel gratuit', content_category: 'Booking' });
+            break;
+          case 'calendly.date_and_time_selected':
+            track('InitiateCheckout', { content_name: 'Créneau sélectionné', content_category: 'Booking' });
+            break;
+          case 'calendly.event_scheduled':
+            // ── PRIMARY CONVERSION — booked call ──
+            // Deterministic eventID from the Calendly invitee so the server-side
+            // CAPI event (Calendly webhook) dedupes with this browser event.
+            var iid = inviteeId(payload);
+            track('Lead', {
+              content_name: 'Appel gratuit réservé',
+              content_category: 'Booking',
+              value: 0.00, currency: 'EUR'
+            }, iid ? ('Lead_' + iid) : null);
+            // Meta appointment-booking event (kept in parallel for flexibility)
+            track('Schedule', {
+              content_name: 'Appel gratuit', content_category: 'Booking'
+            }, iid ? ('Schedule_' + iid) : null);
+            break;
+        }
+      }, false);
+    })();
   </script>
 
 </body>
