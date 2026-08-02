@@ -1047,13 +1047,20 @@
       }
     }
 
-    // ── SMOOTH SCROLL ───────────────────────────────────────────────────
+    // ── SMOOTH SCROLL (precise) ─────────────────────────────────────────
     document.querySelectorAll('a[href^="#"]').forEach(function(a) {
       a.addEventListener('click', function(e) {
         var t = document.getElementById(a.getAttribute('href').slice(1));
         if (!t) return;
         e.preventDefault();
-        t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Settle the fade-up transform on the target (and its fade-up children)
+        // FIRST — otherwise it is still shifted +24px when we measure and we
+        // land above the real position.
+        t.classList.add('in');
+        t.querySelectorAll('.fade-up').forEach(function(el){ el.classList.add('in'); });
+        var GAP = 8; // small breathing space above the card
+        var y = t.getBoundingClientRect().top + window.pageYOffset - GAP;
+        window.scrollTo({ top: y, behavior: 'smooth' });
       });
     });
   </script>
