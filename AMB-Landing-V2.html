@@ -9,6 +9,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 
+  <!-- Calendly — warm up connections early so the booking widget loads fast -->
+  <link rel="preconnect" href="https://assets.calendly.com" crossorigin>
+  <link rel="preconnect" href="https://calendly.com" crossorigin>
+  <link rel="dns-prefetch" href="https://calendly.com">
+  <link rel="prefetch" href="https://assets.calendly.com/assets/external/widget.js" as="script" crossorigin>
+
   <style>
     /* ═══════════════════════════════════════════
        VARIABLES
@@ -970,8 +976,7 @@
 
       <!-- Calendly embed -->
       <div class="calendly-wrap fade-up" id="calendly">
-        <div class="calendly-inline-widget" data-url="https://calendly.com/lesambitieuses/as?" style="min-width:320px;height:630px;"></div>
-        <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+        <div class="calendly-inline-widget" data-url="https://calendly.com/lesambitieuses/as?hide_gdpr_banner=1" style="min-width:320px;height:1000px;"></div>
       </div>
 
       <div class="signature fade-up">
@@ -1060,6 +1065,38 @@
         t.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
+
+    // ── LAZY-LOAD CALENDLY ──────────────────────────────────────────────
+    // The Calendly iframe is heavy; loading it at page load slows everything
+    // above it. Inject the widget only when the visitor is ~2 screens away
+    // (or the instant they tap a "book" CTA), so the page stays fast and the
+    // widget is ready by the time they arrive. Connections are already warmed
+    // by the preconnect/prefetch tags in <head>.
+    (function(){
+      var wrap = document.getElementById('calendly');
+      if (!wrap) return;
+      var loaded = false;
+      function loadCalendly(){
+        if (loaded) return; loaded = true;
+        var s = document.createElement('script');
+        s.src = 'https://assets.calendly.com/assets/external/widget.js';
+        s.async = true;
+        document.body.appendChild(s);
+      }
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function(entries){
+          if (entries.some(function(e){ return e.isIntersecting; })) { loadCalendly(); io.disconnect(); }
+        }, { rootMargin: '1200px 0px' });
+        io.observe(wrap);
+      } else {
+        loadCalendly();
+      }
+      // Load immediately on booking intent (sticky CTA / anchor to the section).
+      document.addEventListener('click', function(e){
+        var a = e.target.closest ? e.target.closest('a[href="#calendly"], a[href="#cta"]') : null;
+        if (a) loadCalendly();
+      }, true);
+    })();
   </script>
 
   <!-- ══ CONSENT — always-on cookie banner (hidden by default) ══════════ -->
