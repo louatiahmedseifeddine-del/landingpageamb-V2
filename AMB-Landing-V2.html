@@ -1047,34 +1047,50 @@
       }
     }
 
-    // ── SMOOTH SCROLL (precise, self-correcting) ────────────────────────
+    // ── SMOOTH SCROLL (frame-locked to a MOVING target) ─────────────────
+    // On live/mobile the calendar keeps shifting after the scroll starts —
+    // web-fonts swap, images decode and the Calendly iframe reflows, all
+    // slower than on localhost. So instead of measuring once, we re-read the
+    // target's position every frame and ease toward it until the layout has
+    // genuinely stopped moving. Late-loading assets can no longer desync it.
     function ambScrollTo(t){
-      // Settle every fade-up entrance offset so measurements are final.
       document.querySelectorAll('.fade-up').forEach(function(el){ el.classList.add('in'); });
       var GAP = 8; // small breathing space above the card
       function wantY(){
         return Math.max(0, Math.round(t.getBoundingClientRect().top + window.pageYOffset - GAP));
       }
-      window.scrollTo({ top: wantY(), behavior: 'smooth' });
-      // On mobile the target keeps moving AFTER we start scrolling — web-font
-      // swap, lazy images and the Calendly iframe all reflow late. Re-align
-      // once the initial smooth scroll has finished, until the target is stable.
-      var released = false;
-      function release(){ released = true; window.removeEventListener('touchmove', release); window.removeEventListener('wheel', release); }
-      window.addEventListener('touchmove', release, { passive: true });
-      window.addEventListener('wheel', release, { passive: true });
-      // Wait for the initial smooth scroll to finish, THEN snap out any drift
-      // caused by late reflow. Corrections are instant (small residual only).
-      setTimeout(function(){
-        var tries = 0;
-        var iv = setInterval(function(){
-          tries++;
-          if (!released && Math.abs(window.pageYOffset - wantY()) > 2) {
-            window.scrollTo({ top: wantY(), behavior: 'auto' });
-          }
-          if (tries >= 10 || released) clearInterval(iv);
-        }, 200);
-      }, 650);
+      var interrupted = false;
+      function stop(){ interrupted = true; }
+      ['wheel','touchstart','keydown'].forEach(function(ev){ window.addEventListener(ev, stop, { passive: true }); });
+      function cleanup(){ ['wheel','touchstart','keydown'].forEach(function(ev){ window.removeEventListener(ev, stop); }); }
+
+      var startT = Date.now(), stableFrames = 0;
+      function frame(){
+        if (interrupted) return cleanup();
+        var elapsed = Date.now() - startT;
+        var cur = window.pageYOffset;
+        var want = wantY();
+        var diff = want - cur;
+        if (Math.abs(diff) <= 1) {
+          stableFrames++;
+        } else {
+          stableFrames = 0;
+          var step = diff * 0.22;               // ease toward the live target
+          if (Math.abs(step) < 1) step = diff;   // final pixel-perfect snap
+          window.scrollTo(0, Math.round(cur + step));
+        }
+        // Keep following through late reflow, but at least ~1.5s so early
+        // font/image loads are caught; give up after 6s or once the user acts.
+        var done = (stableFrames > 24 && elapsed > 1500) || elapsed > 6000;
+        if (done) return cleanup();
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+
+      // Fonts finishing is the most common late shifter — nudge immediately.
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function(){ stableFrames = 0; });
+      }
     }
     document.querySelectorAll('a[href^="#"]').forEach(function(a) {
       a.addEventListener('click', function(e) {
