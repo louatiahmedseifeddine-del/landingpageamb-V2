@@ -1047,20 +1047,41 @@
       }
     }
 
-    // ── SMOOTH SCROLL (precise) ─────────────────────────────────────────
+    // ── SMOOTH SCROLL (precise, self-correcting) ────────────────────────
+    function ambScrollTo(t){
+      // Settle every fade-up entrance offset so measurements are final.
+      document.querySelectorAll('.fade-up').forEach(function(el){ el.classList.add('in'); });
+      var GAP = 8; // small breathing space above the card
+      function wantY(){
+        return Math.max(0, Math.round(t.getBoundingClientRect().top + window.pageYOffset - GAP));
+      }
+      window.scrollTo({ top: wantY(), behavior: 'smooth' });
+      // On mobile the target keeps moving AFTER we start scrolling — web-font
+      // swap, lazy images and the Calendly iframe all reflow late. Re-align
+      // once the initial smooth scroll has finished, until the target is stable.
+      var released = false;
+      function release(){ released = true; window.removeEventListener('touchmove', release); window.removeEventListener('wheel', release); }
+      window.addEventListener('touchmove', release, { passive: true });
+      window.addEventListener('wheel', release, { passive: true });
+      // Wait for the initial smooth scroll to finish, THEN snap out any drift
+      // caused by late reflow. Corrections are instant (small residual only).
+      setTimeout(function(){
+        var tries = 0;
+        var iv = setInterval(function(){
+          tries++;
+          if (!released && Math.abs(window.pageYOffset - wantY()) > 2) {
+            window.scrollTo({ top: wantY(), behavior: 'auto' });
+          }
+          if (tries >= 10 || released) clearInterval(iv);
+        }, 200);
+      }, 650);
+    }
     document.querySelectorAll('a[href^="#"]').forEach(function(a) {
       a.addEventListener('click', function(e) {
         var t = document.getElementById(a.getAttribute('href').slice(1));
         if (!t) return;
         e.preventDefault();
-        // Settle the fade-up transform on the target (and its fade-up children)
-        // FIRST — otherwise it is still shifted +24px when we measure and we
-        // land above the real position.
-        t.classList.add('in');
-        t.querySelectorAll('.fade-up').forEach(function(el){ el.classList.add('in'); });
-        var GAP = 8; // small breathing space above the card
-        var y = t.getBoundingClientRect().top + window.pageYOffset - GAP;
-        window.scrollTo({ top: y, behavior: 'smooth' });
+        ambScrollTo(t);
       });
     });
   </script>
