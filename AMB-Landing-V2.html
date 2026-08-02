@@ -50,7 +50,7 @@
        RESET
     ═══════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 12px; }
     body {
       font-family: var(--font-body);
       font-size: var(--text-body);
@@ -1047,57 +1047,17 @@
       }
     }
 
-    // ── SMOOTH SCROLL (frame-locked to a MOVING target) ─────────────────
-    // On live/mobile the calendar keeps shifting after the scroll starts —
-    // web-fonts swap, images decode and the Calendly iframe reflows, all
-    // slower than on localhost. So instead of measuring once, we re-read the
-    // target's position every frame and ease toward it until the layout has
-    // genuinely stopped moving. Late-loading assets can no longer desync it.
-    function ambScrollTo(t){
-      document.querySelectorAll('.fade-up').forEach(function(el){ el.classList.add('in'); });
-      var GAP = 8; // small breathing space above the card
-      function wantY(){
-        return Math.max(0, Math.round(t.getBoundingClientRect().top + window.pageYOffset - GAP));
-      }
-      var interrupted = false;
-      function stop(){ interrupted = true; }
-      ['wheel','touchstart','keydown'].forEach(function(ev){ window.addEventListener(ev, stop, { passive: true }); });
-      function cleanup(){ ['wheel','touchstart','keydown'].forEach(function(ev){ window.removeEventListener(ev, stop); }); }
-
-      var startT = Date.now(), stableFrames = 0;
-      function frame(){
-        if (interrupted) return cleanup();
-        var elapsed = Date.now() - startT;
-        var cur = window.pageYOffset;
-        var want = wantY();
-        var diff = want - cur;
-        if (Math.abs(diff) <= 1) {
-          stableFrames++;
-        } else {
-          stableFrames = 0;
-          var step = diff * 0.22;               // ease toward the live target
-          if (Math.abs(step) < 1) step = diff;   // final pixel-perfect snap
-          window.scrollTo(0, Math.round(cur + step));
-        }
-        // Keep following through late reflow, but at least ~1.5s so early
-        // font/image loads are caught; give up after 6s or once the user acts.
-        var done = (stableFrames > 24 && elapsed > 1500) || elapsed > 6000;
-        if (done) return cleanup();
-        requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
-
-      // Fonts finishing is the most common late shifter — nudge immediately.
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(function(){ stableFrames = 0; });
-      }
-    }
+    // ── SMOOTH SCROLL ───────────────────────────────────────────────────
+    // Plain native smooth scroll. The only guard: settle the target's fade-up
+    // entrance first so it doesn't drift ~24px while the browser scrolls to it.
+    // The landing gap is handled by `scroll-padding-top` on <html> in CSS.
     document.querySelectorAll('a[href^="#"]').forEach(function(a) {
       a.addEventListener('click', function(e) {
         var t = document.getElementById(a.getAttribute('href').slice(1));
         if (!t) return;
         e.preventDefault();
-        ambScrollTo(t);
+        t.classList.add('in');
+        t.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
   </script>
