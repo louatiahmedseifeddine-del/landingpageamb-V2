@@ -698,6 +698,67 @@
         return v;
       }catch(e){ return null; }
     }
+    // ── fbc / fbp capture ─────────────────────────────────────────────
+    // If the visitor lands with ?fbclid= (any Meta ad click), persist it and
+    // build the _fbc cookie ourselves — the Pixel only sets it when it loads,
+    // and ad blockers prevent that. fbp/fbc are then attached to every
+    // server-side (CAPI) event for maximum match quality + attribution.
+    function ambReadCookie(name){
+      var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+      return m ? decodeURIComponent(m[1]) : null;
+    }
+    (function(){
+      try{
+        var fbclid = new URLSearchParams(location.search).get('fbclid');
+        if (fbclid){
+          localStorage.setItem('amb_fbclid', fbclid);
+          localStorage.setItem('amb_fbclid_ts', String(Date.now()));
+          if (!ambReadCookie('_fbc')){
+            document.cookie = '_fbc=fb.1.' + Date.now() + '.' + encodeURIComponent(fbclid) +
+              '; path=/; max-age=' + (90*24*3600) + '; SameSite=Lax';
+          }
+        }
+      }catch(e){}
+    })();
+    function ambGetFbp(){ return ambReadCookie('_fbp'); }
+    function ambGetFbc(){
+      var c = ambReadCookie('_fbc');
+      if (c) return c;
+      try{
+        var id = localStorage.getItem('amb_fbclid');
+        var ts = localStorage.getItem('amb_fbclid_ts');
+        if (id && ts) return 'fb.1.' + ts + '.' + id;
+      }catch(e){}
+      return null;
+    }
+    // ── first-party CAPI mirror ───────────────────────────────────────
+    // Sends the same event (same eventID) to our own /api/meta-track, which
+    // adds the real client IP + user-agent and forwards to Meta's Conversions
+    // API. Works even when fbevents.js is blocked; Meta dedupes by eventID.
+    function ambServerTrack(name, id, custom){
+      try{
+        if (localStorage.getItem('amb_cookie_consent') === 'revoked') return;
+        var body = JSON.stringify({
+          event_name: name,
+          event_id: id,
+          event_source_url: location.href,
+          fbp: ambGetFbp(),
+          fbc: ambGetFbc(),
+          external_id: ambGetExternalId(),
+          custom_data: custom || {}
+        });
+        if (navigator.sendBeacon){
+          navigator.sendBeacon('/api/meta-track', new Blob([body], { type: 'application/json' }));
+        } else {
+          fetch('/api/meta-track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true });
+        }
+      }catch(e){}
+    }
+    function ambNewEventId(name){
+      var r = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+            : (Date.now().toString(36) + Math.random().toString(36).slice(2));
+      return name + '_' + r;
+    }
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -707,7 +768,12 @@
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '955572904130075', { external_id: ambGetExternalId() });
-    fbq('track', 'PageView');
+    var ambPvId = ambNewEventId('PageView');
+    fbq('track', 'PageView', {}, { eventID: ambPvId });
+    // Mirror PageView server-side after load, once fbevents has set _fbp.
+    window.addEventListener('load', function(){
+      setTimeout(function(){ ambServerTrack('PageView', ambPvId); }, 400);
+    });
   </script>
   <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=955572904130075&ev=PageView&noscript=1" alt=""/></noscript>
@@ -1078,6 +1144,27 @@
       var loaded = false;
       function loadCalendly(){
         if (loaded) return; loaded = true;
+        // Round-trip attribution: put fbc/fbp/external_id into the embed's
+        // UTM fields — Calendly echoes them back in the invitee.created
+        // webhook (payload.tracking), so the server-side CAPI Lead carries
+        // full match data (email + fbc + fbp + external_id).
+        try {
+          var w = wrap.querySelector('.calendly-inline-widget');
+          if (w) {
+            var u = new URL(w.getAttribute('data-url'));
+            var pageQ = new URLSearchParams(location.search);
+            ['utm_source','utm_medium','utm_campaign'].forEach(function(k){
+              var v = pageQ.get(k); if (v) u.searchParams.set(k, v);
+            });
+            var fbc = (typeof ambGetFbc === 'function') && ambGetFbc();
+            var fbp = (typeof ambGetFbp === 'function') && ambGetFbp();
+            var ext = (typeof ambGetExternalId === 'function') && ambGetExternalId();
+            if (fbc) u.searchParams.set('utm_content', fbc);
+            if (fbp) u.searchParams.set('utm_term', fbp);
+            if (ext) u.searchParams.set('salesforce_uuid', ext);
+            w.setAttribute('data-url', u.toString());
+          }
+        } catch(e){}
         var s = document.createElement('script');
         s.src = 'https://assets.calendly.com/assets/external/widget.js';
         s.async = true;
@@ -1144,18 +1231,19 @@
       if (ref) ref.addEventListener('click', function(){ revokeConsent(); if (banner) banner.hidden = true; });
 
       // ── EVENT HELPERS ───────────────────────────────────────────────
+      // Every event goes out twice with the SAME eventID: browser Pixel +
+      // first-party /api/meta-track (CAPI). Meta dedupes; if the Pixel is
+      // blocked, the server event still lands.
       function extId(){ return (typeof ambGetExternalId === 'function') ? ambGetExternalId() : null; }
-      function newId(name){
-        var r = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
-              : (Date.now().toString(36) + Math.random().toString(36).slice(2));
-        return name + '_' + r;
-      }
       function track(name, params, forcedId){
-        if (typeof fbq !== 'function') return null;
         params = params || {};
-        var x = extId(); if (x) params.external_id = x;
-        var id = forcedId || newId(name);
-        fbq('track', name, params, { eventID: id });
+        var id = forcedId || ambNewEventId(name);
+        if (typeof ambServerTrack === 'function') ambServerTrack(name, id, params);
+        if (typeof fbq !== 'function') return id;
+        var p = {};
+        for (var k in params) p[k] = params[k];
+        var x = extId(); if (x) p.external_id = x;
+        fbq('track', name, p, { eventID: id });
         return id;
       }
 

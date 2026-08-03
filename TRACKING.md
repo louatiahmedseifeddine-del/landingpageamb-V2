@@ -19,17 +19,23 @@ Source copy kept in sync: `AMB-Landing-V2.html`.
 
 All events carry a deterministic `eventID` for the conversion (`Lead_<inviteeUuid>` / `Schedule_<inviteeUuid>`) so the browser + server events **deduplicate**.
 
-> The sticky CTA now smooth-scrolls to the inline Calendly embed (same page) instead of opening a new tab, so every booking posts `event_scheduled` back and fires `Lead`. CAPI remains a server-side backup for events the browser loses (ad blockers, iOS).
+> The sticky CTA now smooth-scrolls to the inline Calendly embed (same page) instead of opening a new tab, so every booking posts `event_scheduled` back and fires `Lead`.
 
-## Conversions API (CAPI) — structure ready, credentials pending
-Function: `api/calendly-webhook.js` → Vercel endpoint `POST /api/calendly-webhook`.
-Without env vars it validates + logs and returns 200 (no-op), so nothing breaks before go-live.
+## fbc / fbp capture (browser)
+- On landing with `?fbclid=`, the page persists it (localStorage `amb_fbclid`) and sets the `_fbc` cookie itself (`fb.1.<ts>.<fbclid>`) — so attribution survives even when fbevents.js is blocked.
+- `_fbp` is read from the Pixel's cookie.
+- Both are attached to every server-side event.
 
-### To go live (when you have the BM + token)
-1. Create a **system-user access token** with Conversions API access in Meta Events Manager (Pixel 955572904130075).
-2. In Vercel → Settings → Environment Variables, set: `META_PIXEL_ID`, `META_CAPI_ACCESS_TOKEN` (see `.env.example`). Optionally `META_TEST_EVENT_CODE`, `SITE_URL`, `CALENDLY_WEBHOOK_SIGNING_KEY`.
-3. Create a Calendly **webhook subscription** (Professional plan+) for `invitee.created` → URL `https://YOUR-DOMAIN/api/calendly-webhook`. Save the signing key into `CALENDLY_WEBHOOK_SIGNING_KEY`.
-4. Book a test call → confirm one deduped `Lead` in Events Manager (Test events, then Overview).
+## Conversions API (CAPI) — two server paths, both dedupe by eventID
+1. **`POST /api/meta-track`** (`api/meta-track.js`) — the page mirrors *every* Pixel event here via `sendBeacon` with the same `eventID`. The function adds the real client IP + user-agent, hashes `external_id`, validates fbp/fbc, and forwards to Meta. If the Pixel is blocked, this still lands; if not, Meta dedupes.
+2. **`POST /api/calendly-webhook`** (`api/calendly-webhook.js`) — Calendly `invitee.created` → `Lead` + `Schedule` with hashed email/name. The embed round-trips attribution through Calendly UTM fields: `utm_content` = `_fbc`, `utm_term` = `_fbp`, `salesforce_uuid` = `amb_ext_id`, so the webhook event also carries fbc/fbp/external_id.
+
+Without env vars both functions validate + log and return 200 (no-op), so nothing breaks before go-live.
+
+### Go-live checklist
+1. In Vercel → Project → Settings → Environment Variables (all environments), set `META_PIXEL_ID=955572904130075` and `META_CAPI_ACCESS_TOKEN=<system-user token>` (see `.env.example`). Optionally `META_TEST_EVENT_CODE`, `SITE_URL`, `CALENDLY_WEBHOOK_SIGNING_KEY`. Redeploy after adding.
+2. Create a Calendly **webhook subscription** (Professional plan+) for `invitee.created` → URL `https://YOUR-DOMAIN/api/calendly-webhook`. Save the signing key into `CALENDLY_WEBHOOK_SIGNING_KEY`.
+3. Validate with `META_TEST_EVENT_CODE` (Events Manager → Test events): load the page, click a CTA, book a test call → events show `Browser · Server` badges and one deduped `Lead`. Then **remove** the test code var and redeploy.
 
 ## Still worth doing (not tracking-blocking)
 - Legal footer links (`Mentions légales`, `Politique de confidentialité`) are `href="#"` — point them to real pages.

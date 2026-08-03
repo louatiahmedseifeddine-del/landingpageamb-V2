@@ -24,7 +24,7 @@
 
 const crypto = require('crypto');
 
-const GRAPH_VERSION = process.env.META_GRAPH_VERSION || 'v21.0';
+const GRAPH_VERSION = process.env.META_GRAPH_VERSION || 'v23.0';
 
 // SHA-256 hash, normalized (trim + lowercase) — required for Meta user_data.
 function sha256(v) {
@@ -130,12 +130,24 @@ module.exports = async function handler(req, res) {
   const last = name.split(' ').slice(1).join(' ') || '';
   const nowSec = Math.floor(Date.now() / 1000);
 
+  // The landing page round-trips browser attribution through the Calendly
+  // embed's UTM fields: utm_content = _fbc, utm_term = _fbp,
+  // salesforce_uuid = amb_ext_id (the same external_id the Pixel sends).
+  const tr = p.tracking || {};
+  const isFb = (v) => typeof v === 'string' && /^fb\.\d\.\d+\..+/.test(v) && v.length < 512;
+  const fbc = isFb(tr.utm_content) ? tr.utm_content : undefined;
+  const fbp = isFb(tr.utm_term) ? tr.utm_term : undefined;
+  const extIds = [tr.salesforce_uuid, iid].filter(Boolean).map(sha256);
+
   // Hashed user data (Meta hashes PII; we send it already hashed).
+  // fbc/fbp must NOT be hashed.
   const user_data = {
     em: sha256(p.email),
     fn: sha256(first),
     ln: sha256(last),
-    external_id: iid ? sha256(iid) : undefined,
+    external_id: extIds.length ? extIds : undefined,
+    fbc,
+    fbp,
   };
   Object.keys(user_data).forEach((k) => user_data[k] === undefined && delete user_data[k]);
 
