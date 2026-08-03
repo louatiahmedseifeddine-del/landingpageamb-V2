@@ -6,6 +6,7 @@
   <title>AMB Académie</title>
 </head>
 <body>
-  <script>window.location.replace('/settingav/');</script>
+  <!-- Keep ?fbclid= and UTM params through the redirect — losing them kills ad attribution. -->
+  <script>window.location.replace('/settingav/' + window.location.search + window.location.hash);</script>
 </body>
 </html>
