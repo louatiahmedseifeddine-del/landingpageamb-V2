@@ -650,6 +650,216 @@
     }
 
     /* ═══════════════════════════════════════════
+       QUIZ
+    ═══════════════════════════════════════════ */
+    #quiz { scroll-margin-top: 16px; }
+    .quiz-wrap {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 16px 20px;
+      box-shadow: var(--shadow-sm);
+      margin-top: 4px;
+    }
+    .quiz-title {
+      font-family: var(--font-title);
+      font-size: clamp(1.25rem, 5vw, 1.55rem);
+      font-weight: 600;
+      line-height: 1.25;
+      margin: 0 0 6px;
+    }
+    .quiz-lead {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+    .quiz-progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .quiz-progress-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--rose-mid);
+    }
+    .quiz-progress-track {
+      height: 4px;
+      background: var(--beige);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .quiz-progress-fill {
+      height: 100%;
+      width: 12.5%;
+      background: linear-gradient(90deg, var(--rose), var(--rose-dark));
+      border-radius: inherit;
+      transition: width 0.3s ease;
+    }
+    .quiz-step { display: none; }
+    .quiz-step.is-active { display: block; }
+    .quiz-q {
+      font-family: var(--font-title);
+      font-size: clamp(1.15rem, 4.2vw, 1.35rem);
+      font-weight: 500;
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-option {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 14px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.18s, background 0.18s, box-shadow 0.18s, transform 0.18s;
+    }
+    .quiz-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .quiz-radio {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(212,83,126,0.28);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 2px;
+      background: var(--white);
+      display: block;
+      font-style: normal;
+    }
+    .quiz-option span:last-child {
+      font-size: 14px;
+      color: var(--text-dark);
+      line-height: 1.45;
+    }
+    .quiz-option:has(input:checked) {
+      border-color: var(--rose);
+      background: var(--rose-light);
+      box-shadow: var(--shadow-sm);
+    }
+    .quiz-option:has(input:checked) .quiz-radio {
+      border-color: var(--rose);
+      background: var(--rose);
+      box-shadow: inset 0 0 0 3px var(--white);
+    }
+    .quiz-option:active { transform: scale(0.99); }
+    @media (hover: hover) {
+      .quiz-option:hover { border-color: rgba(212,83,126,0.35); transform: translateY(-1px); }
+    }
+    .quiz-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .quiz-field label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+    .quiz-field input,
+    .quiz-field textarea {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--cream);
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--text-dark);
+    }
+    .quiz-field textarea {
+      min-height: 140px;
+      line-height: 1.5;
+      resize: vertical;
+    }
+    .quiz-field input:focus,
+    .quiz-field textarea:focus {
+      outline: none;
+      border-color: var(--rose);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(212,83,126,0.15);
+    }
+    .quiz-intro {
+      font-size: 14px;
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+    .quiz-intro p + p { margin-top: 10px; }
+    .quiz-hint {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.65;
+      margin-top: 8px;
+    }
+    .quiz-context {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin-top: 16px;
+    }
+    .quiz-context p + p { margin-top: 10px; }
+    .quiz-option--check .quiz-radio { border-radius: 5px; }
+    .quiz-field-note {
+      font-size: 12px;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+    .quiz-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .quiz-back {
+      background: none;
+      border: none;
+      color: var(--text-soft);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0 10px;
+      min-height: 52px;
+      white-space: nowrap;
+    }
+    .quiz-nav .btn { flex: 1; }
+    .quiz-nav [hidden] { display: none !important; }
+    .btn-quiz-submit {
+      white-space: normal;
+      line-height: 1.3;
+      padding: 14px 18px;
+      min-height: 56px;
+    }
+    .quiz-error {
+      display: none;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--rose-dark);
+      background: var(--rose-light);
+      border: 1px solid rgba(212,83,126,0.25);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .quiz-error.is-on { display: block; }
+    #calendly-step[hidden],
+    #insta-step[hidden] { display: none !important; }
+    .quiz-wrap[hidden] { display: none !important; }
+
+    /* ═══════════════════════════════════════════
        FOOTER
     ═══════════════════════════════════════════ */
     footer {
@@ -802,7 +1012,7 @@
   <div id="progress-bar" role="progressbar" aria-hidden="true"></div>
 
   <div id="sticky-cta" aria-hidden="true">
-    <a href="#calendly" tabindex="-1">Plus de questions ? Réserve ton appel gratuit →</a>
+    <a href="#quiz" tabindex="-1">Est-ce que c'est fait pour toi ? →</a>
   </div>
 
   <button id="back-to-top" aria-label="Revenir en haut de page" onclick="window.scrollTo({top:0,behavior:'smooth'})">
@@ -1044,36 +1254,178 @@
 
   <hr class="divider">
 
-  <!-- ══ BLOC 7 — CTA FINAL ════════════════════════════════════════════ -->
-  <section id="cta" aria-label="Réserver un appel stratégique">
+  <!-- ══ BLOC 7 — QUIZ + CALENDLY ═══════════════════════════════════ -->
+  <section id="cta" aria-label="Quiz et réservation d'appel">
     <div class="wrap">
 
       <h2 class="fade-up">Dans 6 mois, tu seras soit au même endroit — soit complètement ailleurs.</h2>
-      <p class="subtitle fade-up">Cet appel, c'est la différence. 45 minutes, gratuit, sans engagement. On fait le point sur ta situation et on voit ensemble ce qui est possible pour toi maintenant.</p>
+      <p class="subtitle fade-up">Avant de réserver ton appel, réponds à ces questions. Ça me permet de voir si le programme est vraiment fait pour toi — ensuite tu pourras réserver ton appel gratuit.</p>
 
-      <p class="cta-note fade-up">Si ton projet est prévu dans 6 mois ou plus, ou si tu n'es pas certaine de pouvoir honorer le rendez-vous, contacte-moi plutôt sur <a href="https://www.instagram.com/sarah.nmdsoul/" target="_blank" rel="noopener noreferrer">Instagram</a> afin que nous puissions continuer la discussion là-bas.</p>
+      <form id="quiz" class="quiz-wrap fade-up" novalidate>
+        <span class="eyebrow">Quiz — 8 questions</span>
+        <h3 class="quiz-title">Est-ce que le Setting / l'Assistanat Virtuel est fait pour toi ?</h3>
+        <p class="quiz-lead">Toutes les questions sont obligatoires. 2 minutes, et on voit ensuite si on avance ensemble.</p>
 
-      <div class="reassurance-pills fade-up">
-        <span class="r-pill">✓ Appel gratuit</span>
-        <span class="r-pill">✓ 45 minutes</span>
-        <span class="r-pill">✓ Sans engagement</span>
-        <span class="r-pill">✓ Honnêteté totale</span>
+        <div class="quiz-progress-top">
+          <span class="quiz-progress-label" id="quiz-step-label">Étape 1 / 8</span>
+        </div>
+        <div class="quiz-progress-track" aria-hidden="true">
+          <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+        </div>
+
+        <div class="quiz-step is-active" data-step="0">
+          <div class="quiz-intro">
+            <p>Génial de voir ton intérêt pour l'Académie des Ambitieuses et hâte d'échanger avec toi !</p>
+            <p>Avant de réserver ton échange je vais te poser quelques questions pour comprendre ton profil.</p>
+            <p>Pour rappel ceci n'est pas un appel pour postuler à un travail mais pour te former sur un métier du digital.</p>
+          </div>
+          <div class="quiz-field">
+            <label for="quiz-prenom-nom">Prénom &amp; Nom</label>
+            <input id="quiz-prenom-nom" name="prenom_nom" type="text" autocomplete="name" required minlength="2" placeholder="Ton prénom et nom">
+          </div>
+          <div class="quiz-field">
+            <label for="quiz-email">Mail</label>
+            <input id="quiz-email" name="email" type="email" autocomplete="email" required placeholder="ton@email.com">
+          </div>
+          <div class="quiz-field">
+            <label for="quiz-whatsapp">Whatsapp</label>
+            <input id="quiz-whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+33 6 12 34 56 78">
+            <span class="quiz-field-note">nous reviendrons vers toi pour confirmer le rdv</span>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="1">
+          <p class="quiz-q" id="quiz-situation-q">Où tu en es actuellement ?</p>
+          <div class="quiz-options" role="radiogroup" aria-labelledby="quiz-situation-q" aria-required="true">
+            <label class="quiz-option"><input type="radio" name="situation" value="Salariée, et j'ai envie d'autre chose" required><i class="quiz-radio" aria-hidden="true"></i><span>Salariée, et j'ai envie d'autre chose</span></label>
+            <label class="quiz-option"><input type="radio" name="situation" value="Salariée à la recherche d'un complément"><i class="quiz-radio" aria-hidden="true"></i><span>Salariée à la recherche d'un complément</span></label>
+            <label class="quiz-option"><input type="radio" name="situation" value="Indépendante"><i class="quiz-radio" aria-hidden="true"></i><span>Indépendante</span></label>
+            <label class="quiz-option"><input type="radio" name="situation" value="Sans activité en ce moment"><i class="quiz-radio" aria-hidden="true"></i><span>Sans activité en ce moment</span></label>
+            <label class="quiz-option"><input type="radio" name="situation" value="Étudiante"><i class="quiz-radio" aria-hidden="true"></i><span>Étudiante</span></label>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="2">
+          <p class="quiz-q" id="quiz-objectifs-q">Quels sont tes objectifs, ce que tu rêves d'accomplir sur les prochains mois ? Le but est que tu sois la plus précises possible pour qu'on puisse comprendre ton projet.</p>
+          <div class="quiz-field">
+            <textarea id="quiz-objectifs" name="objectifs" rows="5" required aria-labelledby="quiz-objectifs-q"></textarea>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="3">
+          <p class="quiz-q" id="quiz-experience-q">As-tu déjà une expérience en vente, relation client ou administratif ?</p>
+          <div class="quiz-options" role="radiogroup" aria-labelledby="quiz-experience-q" aria-required="true">
+            <label class="quiz-option"><input type="radio" name="experience" value="Oui, une vraie expérience" required><i class="quiz-radio" aria-hidden="true"></i><span>Oui, une vraie expérience</span></label>
+            <label class="quiz-option"><input type="radio" name="experience" value="Un peu"><i class="quiz-radio" aria-hidden="true"></i><span>Un peu</span></label>
+            <label class="quiz-option"><input type="radio" name="experience" value="Aucune, je pars de zéro"><i class="quiz-radio" aria-hidden="true"></i><span>Aucune, je pars de zéro</span></label>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="4">
+          <p class="quiz-q" id="quiz-manque-q">Qu'est-ce qu'il te manque concrètement pour atteindre tes objectifs ? Du temps, un accompagnement, être aidée sur comment commencer…</p>
+          <div class="quiz-field">
+            <textarea id="quiz-manque" name="manque" rows="5" required aria-labelledby="quiz-manque-q"></textarea>
+          </div>
+          <p class="quiz-hint">l'idée c'est que tu sois précise. Ne bloque pas un appel avec moi "par curiosité", c'est important que tu aies déjà réfléchi à un projet à minima et à ce qu'il te manque pour le concrétiser 😌</p>
+        </div>
+
+        <div class="quiz-step" data-step="5">
+          <p class="quiz-q" id="quiz-demarrage-q">Tu veux démarrer...</p>
+          <div class="quiz-options" role="radiogroup" aria-labelledby="quiz-demarrage-q" aria-required="true">
+            <label class="quiz-option"><input type="radio" name="demarrage" value="Immédiatement" required><i class="quiz-radio" aria-hidden="true"></i><span>Immédiatement</span></label>
+            <label class="quiz-option"><input type="radio" name="demarrage" value="Dans le mois"><i class="quiz-radio" aria-hidden="true"></i><span>Dans le mois</span></label>
+            <label class="quiz-option"><input type="radio" name="demarrage" value="Dans les 3 mois"><i class="quiz-radio" aria-hidden="true"></i><span>Dans les 3 mois</span></label>
+            <label class="quiz-option"><input type="radio" name="demarrage" value="Je me renseigne encore (ne pas prendre l'appel - suis moi sur insta)"><i class="quiz-radio" aria-hidden="true"></i><span>Je me renseigne encore (ne pas prendre l'appel - suis moi sur insta)</span></label>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="6">
+          <p class="quiz-q" id="quiz-connaissance-q">Depuis quand tu me connais ?</p>
+          <div class="quiz-options" role="radiogroup" aria-labelledby="quiz-connaissance-q" aria-required="true">
+            <label class="quiz-option"><input type="radio" name="connaissance" value="Juste là après la publicité" required><i class="quiz-radio" aria-hidden="true"></i><span>Juste là après la publicité</span></label>
+            <label class="quiz-option"><input type="radio" name="connaissance" value="Je te suis déjà sur instagram"><i class="quiz-radio" aria-hidden="true"></i><span>Je te suis déjà sur instagram</span></label>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="7">
+          <p class="quiz-q" id="quiz-presence-q">Page de présence</p>
+          <div class="quiz-options">
+            <label class="quiz-option quiz-option--check">
+              <input type="checkbox" name="presence" value="Je confirme que je serai présente et dans de bonnes conditions pour cet appel à l'heure convenue" required>
+              <i class="quiz-radio" aria-hidden="true"></i>
+              <span>Je confirme que je serai présente et dans de bonnes conditions pour cet appel à l'heure convenue</span>
+            </label>
+          </div>
+          <div class="quiz-context">
+            <p>⚠️ Si tu ne te présentes pas à l'appel sans prévenir et sans motif valable, tu seras automatiquement disqualifiée et tu ne pourras plus jamais réserver d'appel gratuit.</p>
+            <p>Pense donc à le noter dans ton agenda et accepter l'invitation Google.</p>
+            <p>Tu recevras également un message sur WhatsApp quelques jours avant pour confirmer ta présence.</p>
+            <p>🚨 Veille à y répondre pour que ton appel ne soit pas cédé à quelqu'un sur liste d'attente.</p>
+            <p>Rappel : Cet appel n'est PAS un coaching mais une discussion autour de tes objectifs pour déterminer si l'Académie des Ambitieuses est adapté pour toi.</p>
+          </div>
+        </div>
+
+        <p class="quiz-error" id="quiz-error" role="alert"></p>
+
+        <div class="quiz-nav">
+          <button type="button" class="quiz-back" id="quiz-back" hidden>← Retour</button>
+          <button type="button" class="btn btn-rose" id="quiz-next">Continuer →</button>
+          <button type="submit" class="btn btn-rose btn-quiz-submit" id="quiz-submit" hidden>Découvrir si le programme est fait pour moi</button>
+        </div>
+      </form>
+
+      <div id="calendly-step" hidden>
+        <div class="step2-intro fade-up in">
+          <span class="eyebrow">Étape suivante</span>
+          <p>Parfait. Réserve maintenant ton appel — 45 minutes, gratuit, sans engagement.</p>
+        </div>
+
+        <p class="cta-note">Si ton projet est prévu dans 6 mois ou plus, ou si tu n'es pas certaine de pouvoir honorer le rendez-vous, contacte-moi plutôt sur <a href="https://www.instagram.com/sarah.nmdsoul/" target="_blank" rel="noopener noreferrer">Instagram</a> afin que nous puissions continuer la discussion là-bas.</p>
+
+        <div class="reassurance-pills">
+          <span class="r-pill">✓ Appel gratuit</span>
+          <span class="r-pill">✓ 45 minutes</span>
+          <span class="r-pill">✓ Sans engagement</span>
+          <span class="r-pill">✓ Honnêteté totale</span>
+        </div>
+
+        <!-- Calendly embed -->
+        <div class="calendly-wrap" id="calendly">
+          <div class="calendly-inline-widget" data-url="https://calendly.com/academieamb-info/amb?hide_gdpr_banner=1" style="min-width:320px;height:1000px;"></div>
+        </div>
+
+        <div class="signature">
+          Je prends soin de chaque femme que j'accompagne. Places limitées à 10 par mois.
+          <em>— Sarah, fondatrice AMB Académie</em>
+        </div>
+
+        <p class="final-quote">
+          « Les femmes qui changent leur vie ne sont pas différentes de toi.<br>
+          Elles ont juste décidé d'arrêter d'attendre. »
+        </p>
       </div>
 
-      <!-- Calendly embed -->
-      <div class="calendly-wrap fade-up" id="calendly">
-        <div class="calendly-inline-widget" data-url="https://calendly.com/academieamb-info/amb?hide_gdpr_banner=1" style="min-width:320px;height:1000px;"></div>
-      </div>
+      <div id="insta-step" hidden>
+        <div class="step2-intro fade-up in">
+          <span class="eyebrow">On reste en contact</span>
+          <p>Merci pour tes réponses. Tu as choisi de te renseigner encore — suis-moi sur Instagram, on échangera quand tu seras prête.</p>
+        </div>
 
-      <div class="signature fade-up">
-        Je prends soin de chaque femme que j'accompagne. Places limitées à 10 par mois.
-        <em>— Sarah, fondatrice AMB Académie</em>
-      </div>
+        <p class="cta-note">Retrouve-moi ici : <a href="https://www.instagram.com/sarah.nmdsoul/" target="_blank" rel="noopener noreferrer">instagram.com/sarah.nmdsoul</a></p>
 
-      <p class="final-quote fade-up">
-        « Les femmes qui changent leur vie ne sont pas différentes de toi.<br>
-        Elles ont juste décidé d'arrêter d'attendre. »
-      </p>
+        <div class="reassurance-pills">
+          <span class="r-pill">✓ Pas d'appel pour l'instant</span>
+          <span class="r-pill">✓ Contenu chaque semaine</span>
+          <span class="r-pill">✓ Reviens quand tu es prête</span>
+        </div>
+
+        <a class="btn btn-rose" href="https://www.instagram.com/sarah.nmdsoul/" target="_blank" rel="noopener noreferrer">Suis-moi sur Instagram →</a>
+
+        <div class="signature">
+          Je prends soin de chaque femme que j'accompagne. Places limitées à 10 par mois.
+          <em>— Sarah, fondatrice AMB Académie</em>
+        </div>
+      </div>
 
     </div>
   </section>
@@ -1152,22 +1504,225 @@
       });
     });
 
+    // ── QUIZ ────────────────────────────────────────────────────────────
+    (function(){
+      var form = document.getElementById('quiz');
+      if (!form) return;
+      var steps = form.querySelectorAll('.quiz-step');
+      var nextBtn = document.getElementById('quiz-next');
+      var backBtn = document.getElementById('quiz-back');
+      var submitBtn = document.getElementById('quiz-submit');
+      var errEl = document.getElementById('quiz-error');
+      var labelEl = document.getElementById('quiz-step-label');
+      var fillEl = document.getElementById('quiz-progress-fill');
+      var calendlyStep = document.getElementById('calendly-step');
+      var instaStep = document.getElementById('insta-step');
+      var stickyLink = document.querySelector('#sticky-cta a');
+      var TOTAL = steps.length;
+      var current = 0;
+      var advancing = false;
+      var INSTAGRAM_OPTION = "Je me renseigne encore (ne pas prendre l'appel - suis moi sur insta)";
+      var SHEETS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbx62XSiKseDBKlevj8QZTSobPEtezm6Kf1l4qkqMNp5EdRFNGAPQj0xlxOBCTFDM7hO9Q/exec';
+
+      function showError(msg){
+        if (!errEl) return;
+        if (!msg) { errEl.classList.remove('is-on'); errEl.textContent = ''; return; }
+        errEl.textContent = msg;
+        errEl.classList.add('is-on');
+      }
+
+      function isLast(){ return current === TOTAL - 1; }
+
+      function currentStepEl(){ return steps[current]; }
+
+      function radioValue(name){
+        var el = form.querySelector('input[name="' + name + '"]:checked');
+        return el ? el.value : '';
+      }
+
+      function render(){
+        steps.forEach(function(s, i){ s.classList.toggle('is-active', i === current); });
+        if (labelEl) labelEl.textContent = 'Étape ' + (current + 1) + ' / ' + TOTAL;
+        if (fillEl) fillEl.style.width = (((current + 1) / TOTAL) * 100) + '%';
+        if (backBtn) backBtn.hidden = current === 0;
+        if (nextBtn) nextBtn.hidden = isLast();
+        if (submitBtn) submitBtn.hidden = !isLast();
+        showError('');
+      }
+
+      function validateStep(){
+        var step = currentStepEl();
+        var prenomNomEl = step.querySelector('[name="prenom_nom"]');
+        if (prenomNomEl) {
+          var prenomNom = (form.prenom_nom.value || '').trim();
+          var email = (form.email.value || '').trim();
+          var wa = (form.whatsapp.value || '').trim();
+          if (prenomNom.length < 2) { showError('Merci d’indiquer ton prénom et nom.'); form.prenom_nom.focus(); return false; }
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Merci d’indiquer un email valide.'); form.email.focus(); return false; }
+          if ((wa.replace(/\D/g, '')).length < 8) { showError('Merci d’indiquer un numéro WhatsApp valide.'); form.whatsapp.focus(); return false; }
+        }
+        var radio = step.querySelector('input[type="radio"]');
+        if (radio && !radioValue(radio.name)) {
+          showError('Merci de choisir une réponse pour continuer.');
+          return false;
+        }
+        var textarea = step.querySelector('textarea');
+        if (textarea && !(textarea.value || '').trim()) {
+          showError('Merci de répondre pour continuer.');
+          textarea.focus();
+          return false;
+        }
+        var checkbox = step.querySelector('input[type="checkbox"]');
+        if (checkbox && !checkbox.checked) {
+          showError('Merci de confirmer ta présence pour continuer.');
+          return false;
+        }
+        return true;
+      }
+
+      function go(n){
+        current = Math.max(0, Math.min(TOTAL - 1, n));
+        render();
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function collect(){
+        var pageQ = new URLSearchParams(location.search);
+        var prenomNom = (form.prenom_nom.value || '').trim();
+        var situation = radioValue('situation');
+        var objectifs = (form.objectifs.value || '').trim();
+        var experience = radioValue('experience');
+        var manque = (form.manque.value || '').trim();
+        var demarrage = radioValue('demarrage');
+        var connaissance = radioValue('connaissance');
+        var presenceEl = form.querySelector('input[name="presence"]');
+        var presence = (presenceEl && presenceEl.checked) ? (presenceEl.value || '') : '';
+        return {
+          prenom_nom: prenomNom,
+          email: (form.email.value || '').trim(),
+          whatsapp: (form.whatsapp.value || '').trim(),
+          situation: situation,
+          objectifs: objectifs,
+          experience: experience,
+          manque: manque,
+          demarrage: demarrage,
+          connaissance: connaissance,
+          presence: presence,
+          // Live Apps Script may still append q1–q7 + prenom until redeployed.
+          q1: situation,
+          q2: objectifs,
+          q3: experience,
+          q4: manque,
+          q5: demarrage,
+          q6: connaissance,
+          q7: presence,
+          prenom: prenomNom,
+          utm_source: pageQ.get('utm_source') || '',
+          utm_medium: pageQ.get('utm_medium') || '',
+          utm_campaign: pageQ.get('utm_campaign') || '',
+          page_url: location.href
+        };
+      }
+
+      function sendToSheet(data){
+        var body = JSON.stringify(data);
+        fetch('/api/quiz', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: body
+        }).catch(function(){});
+        return fetch(SHEETS_WEBAPP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: body
+        }).then(function(){ return { ok: true }; });
+      }
+
+      function revealCalendly(){
+        form.hidden = true;
+        if (instaStep) instaStep.hidden = true;
+        if (calendlyStep) calendlyStep.hidden = false;
+        if (stickyLink) {
+          stickyLink.setAttribute('href', '#calendly');
+          stickyLink.removeAttribute('target');
+          stickyLink.textContent = 'Réserve ton appel gratuit →';
+        }
+        if (typeof window.ambLoadCalendly === 'function') window.ambLoadCalendly();
+        if (calendlyStep) {
+          calendlyStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      function revealInstagram(){
+        form.hidden = true;
+        if (calendlyStep) calendlyStep.hidden = true;
+        if (instaStep) instaStep.hidden = false;
+        if (stickyLink) {
+          stickyLink.setAttribute('href', 'https://www.instagram.com/sarah.nmdsoul/');
+          stickyLink.setAttribute('target', '_blank');
+          stickyLink.setAttribute('rel', 'noopener noreferrer');
+          stickyLink.textContent = 'Suis-moi sur Instagram →';
+        }
+        if (instaStep) {
+          instaStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      function revealAfterSubmit(skipCalendly){
+        if (skipCalendly) revealInstagram();
+        else revealCalendly();
+      }
+
+      form.addEventListener('change', function(e){
+        var t = e.target;
+        if (!t || t.type !== 'radio' || isLast() || advancing) return;
+        if (!validateStep()) return;
+        advancing = true;
+        setTimeout(function(){ advancing = false; go(current + 1); }, 220);
+      });
+
+      if (nextBtn) nextBtn.addEventListener('click', function(){
+        if (!validateStep()) return;
+        go(current + 1);
+      });
+      if (backBtn) backBtn.addEventListener('click', function(){ go(current - 1); });
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        if (!validateStep()) return;
+        var data = collect();
+        var required = ['prenom_nom','email','whatsapp','situation','objectifs','experience','manque','demarrage','connaissance','presence'];
+        if (required.some(function(k){ return !data[k]; })) {
+          showError('Toutes les questions sont obligatoires.');
+          return;
+        }
+        var skipCalendly = data.demarrage === INSTAGRAM_OPTION;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Envoi en cours…';
+        sendToSheet(data).then(function(){
+          revealAfterSubmit(skipCalendly);
+          try { window.dispatchEvent(new CustomEvent('amb:quiz-submitted')); } catch(e){}
+        }).catch(function(){
+          var local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+          if (local) { revealAfterSubmit(skipCalendly); return; }
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Découvrir si le programme est fait pour moi';
+          showError('Impossible d’envoyer tes réponses. Réessaie dans un instant.');
+        });
+      });
+
+      render();
+    })();
+
     // ── LAZY-LOAD CALENDLY ──────────────────────────────────────────────
-    // The Calendly iframe is heavy; loading it at page load slows everything
-    // above it. Inject the widget only when the visitor is ~2 screens away
-    // (or the instant they tap a "book" CTA), so the page stays fast and the
-    // widget is ready by the time they arrive. Connections are already warmed
-    // by the preconnect/prefetch tags in <head>.
+    // Loaded only after the quiz is submitted (the widget is hidden until then).
     (function(){
       var wrap = document.getElementById('calendly');
       if (!wrap) return;
       var loaded = false;
       function loadCalendly(){
         if (loaded) return; loaded = true;
-        // Round-trip attribution: put fbc/fbp/external_id into the embed's
-        // UTM fields — Calendly echoes them back in the invitee.created
-        // webhook (payload.tracking), so the server-side CAPI Lead carries
-        // full match data (email + fbc + fbp + external_id).
         try {
           var w = wrap.querySelector('.calendly-inline-widget');
           if (w) {
@@ -1190,17 +1745,9 @@
         s.async = true;
         document.body.appendChild(s);
       }
-      if ('IntersectionObserver' in window) {
-        var io = new IntersectionObserver(function(entries){
-          if (entries.some(function(e){ return e.isIntersecting; })) { loadCalendly(); io.disconnect(); }
-        }, { rootMargin: '1200px 0px' });
-        io.observe(wrap);
-      } else {
-        loadCalendly();
-      }
-      // Load immediately on booking intent (sticky CTA / anchor to the section).
+      window.ambLoadCalendly = loadCalendly;
       document.addEventListener('click', function(e){
-        var a = e.target.closest ? e.target.closest('a[href="#calendly"], a[href="#cta"]') : null;
+        var a = e.target.closest ? e.target.closest('a[href="#calendly"]') : null;
         if (a) loadCalendly();
       }, true);
     })();
@@ -1250,6 +1797,10 @@
       if (acc) acc.addEventListener('click', function(){ grantConsent(); if (banner) banner.hidden = true; });
       if (ref) ref.addEventListener('click', function(){ revokeConsent(); if (banner) banner.hidden = true; });
 
+      window.addEventListener('amb:quiz-submitted', function(){
+        track('Contact', { content_name: 'Quiz AMB soumis', content_category: 'Quiz' });
+      });
+
       // ── EVENT HELPERS ───────────────────────────────────────────────
       // Every event goes out twice with the SAME eventID: browser Pixel +
       // first-party /api/meta-track (CAPI). Meta dedupes; if the Pixel is
@@ -1273,7 +1824,7 @@
         var a = e.target.closest ? e.target.closest('a[href]') : null;
         if (!a) return;
         var href = a.getAttribute('href') || '';
-        if (href.indexOf('calendly.com') !== -1 || href === '#calendly' || href === '#cta') {
+        if (href.indexOf('calendly.com') !== -1 || href === '#calendly' || href === '#cta' || href === '#quiz') {
           track('Contact', { content_name: 'Clic réservation appel', content_category: 'Booking' });
         }
       }, true);
