@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Réserver mon appel — AMB Académie</title>
+  <meta name="description" content="8 questions sur ton projet, puis un appel gratuit de 20 minutes si l'AMB Académie correspond à ta situation.">
+  <!-- Étape interne du funnel : rien à indexer, et surtout pas à proposer en entrée de parcours. -->
+  <meta name="robots" content="noindex,nofollow">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+  <!-- Calendly — warm up connections early so the booking widget loads fast -->
+  <link rel="preconnect" href="https://assets.calendly.com" crossorigin>
+  <link rel="preconnect" href="https://calendly.com" crossorigin>
+  <link rel="dns-prefetch" href="https://calendly.com">
+  <link rel="prefetch" href="https://assets.calendly.com/assets/external/widget.js" as="script" crossorigin>
+
+  <link rel="stylesheet" href="../amb.css">
+
+  <script>
+    /* GARDE DE PARCOURS — décidée avant le premier rendu pour éviter que le
+       quiz n'apparaisse une fraction de seconde avant d'être masqué.
+
+       C'est une règle de parcours côté navigateur, pas une mesure de sécurité :
+       elle est contournable et c'est assumé. Son seul rôle est d'éviter qu'une
+       visiteuse arrivée directement ici (lien partagé, historique, favori)
+       tombe sur un questionnaire sorti de son contexte.
+
+       Si sessionStorage est indisponible, on laisse passer : mieux vaut une
+       garde inopérante qu'une visiteuse bloquée.
+       `?preview=1` permet de tester la page 2 sans regarder la vidéo. */
+    (function () {
+      try {
+        if (/(?:^|[?&])preview=1(?:&|$)/.test(location.search)) return;
+        if (sessionStorage.getItem('amb_vsl_done') !== '1') {
+          document.documentElement.className += ' vsl-required';
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Mesure partagée : Clarity + Meta Pixel + miroir CAPI (voir TRACKING.md) -->
+  <script src="../amb-track.js"></script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=955572904130075&ev=PageView&noscript=1" alt=""/></noscript>
+</head>
+
+<body class="no-js">
+
+  <div id="progress-bar" role="progressbar" aria-hidden="true"></div>
+
+  <button id="back-to-top" aria-label="Revenir en haut de page" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  </button>
+
+  <!-- ══ GARDE DE PARCOURS ══════════════════════════════════════════════ -->
+  <section id="route-gate" aria-label="Revenir à la vidéo">
+    <div class="gate-card">
+      <img src="../logo-amb.png" alt="AMB Académie — Les Ambitieuses" width="68" height="68">
+      <h2>Cette étape vient après la vidéo</h2>
+      <p>
+        Le questionnaire sert à préparer notre appel. Il n'a de sens qu'une fois que tu sais ce que fait
+        vraiment une setteuse et une assistante virtuelle — c'est ce que je t'explique dans la vidéo.
+      </p>
+      <a class="btn btn-rose" href="../">Revenir à la vidéo</a>
+    </div>
+  </section>
+
+  <!-- ══ QUIZ + RÉSERVATION ═════════════════════════════════════════════ -->
+  <main id="page2-main">
+
+    <header class="page2-head">
+      <div class="wrap">
+        <div class="funnel-steps" aria-label="Étape 2 sur 2">
+          <span class="fs-dot is-on" aria-hidden="true"></span><span>Étape 1 — la vidéo</span>
+          <span class="fs-dot is-on" aria-hidden="true"></span><b>Étape 2 — tes réponses</b>
+        </div>
+
+        <div class="hero-logo">
+          <img src="../logo-amb.png" alt="AMB Académie — Les Ambitieuses" width="78" height="78" fetchpriority="high">
+        </div>
+
+        <h1>Avant de réserver ton appel,<br>réponds à quelques questions.</h1>
+        <p class="subtitle">
+          Elles me permettent de comprendre ton projet et de voir si l'Académie est adaptée à ta
+          situation.
+        </p>
+
+        <div class="page2-meta">
+          <span class="r-pill">8 questions</span>
+          <span class="r-pill">environ 2 minutes</span>
+          <span class="r-pill">puis un appel gratuit de 20 minutes si ton profil correspond</span>
+        </div>
+      </div>
+    </header>
+
+    <section id="cta" class="page2-body" aria-label="Questionnaire et réservation d'appel">
+      <div class="wrap">
+
+        <p class="notice" style="margin-bottom:18px;">
+          <strong>Cet appel concerne une formation à un métier du digital.</strong>
+          Il ne s'agit pas d'une candidature à un emploi.
+        </p>
+
+      <form id="quiz" class="quiz-wrap fade-up" novalidate>
+        <span class="eyebrow">Quiz — 8 questions</span>
+        <h3 class="quiz-title">Est-ce que le Setting / l'Assistanat Virtuel est fait pour toi ?</h3>
+        <p class="quiz-lead">Toutes les questions sont obligatoires. 2 minutes, et on voit ensuite si on avance ensemble.</p>
+
+        <div class="quiz-progress-top">
+          <span class="quiz-progress-label" id="quiz-step-label">Étape 1 / 8</span>
+        </div>
+        <div class="quiz-progress-track" aria-hidden="true">
+          <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+        </div>
+
+        <div class="quiz-step is-active" data-step="0">
+          <div class="quiz-intro">
+            <p>Génial de voir ton intérêt pour l'Académie des Ambitieuses et hâte d'échanger avec toi !</p>
+            <p>Avant de réserver ton échange je vais te poser quelques questions pour comprendre ton profil.</p>
+            <p>Pour rappel ceci n'est pas un appel pour postuler à un travail mais pour te former sur un métier du digital.</p>
+          </div>
+          <div class="quiz-field">
+            <label for="quiz-prenom-nom">Prénom &amp; Nom</label>
+            <input id="quiz-prenom-nom" name="prenom_nom" type="text" autocomplete="name" required minlength="2" placeholder="Ton prénom et nom">
+          </div>
+          <div class="quiz-field">
+            <label for="quiz-email">Mail</label>
+            <input id="quiz-email" name="email" type="email" autocomplete="email" required placeholder="ton@email.com">
+          </div>
+          <div class="quiz-field">
+            <label for="quiz-whatsapp">Whatsapp</label>
+            <input id="quiz-whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+33 6 12 34 56 78">
+            <span class="quiz-field-note">nous reviendrons vers toi pour confirmer le rdv</span>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="1">
+          <p class="quiz-q" id="quiz-situation-q">Où tu en es actuellement ?</p>
+          <div class="quiz-options" role="radiogroup" aria-labelledby="quiz-situation-q" aria-required="true">
+            <label class="quiz-option"><input type="radio" name="situation" value="Salariée, et j'ai envie d'autre chose" required><i class="quiz-radio" aria-hidden="true"></i><span>Salariée, et j'ai envie d'autre chose</span></label>
+            <label class="quiz-option"><input type="radio" name="situation" value="Salariée à la recherche d'un complément"><i class="quiz-radio" aria-hidden="true"></i><span>Salariée à la recherche d'un complément</span></label>
+            <label class="quiz-option"><input type="radio" name="situation" value="Indépendante"><i class="quiz-radio" aria-hidden="true"></i><span>Indépendante</span></label>
+            <label class="quiz-option"><input type="radio" name="situation" value="Sans activité en ce moment"><i class="quiz-radio" aria-hidden="true"></i><span>Sans activité en ce moment</span></label>
+            <label class="quiz-option"><input type="radio" name="situation" value="Étudiante"><i class="quiz-radio" aria-hidden="true"></i><span>Étudiante</span></label>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="2">
+          <p class="quiz-q" id="quiz-objectifs-q">Quels sont tes objectifs, ce que tu rêves d'accomplir sur les prochains mois ? Le but est que tu sois la plus précises possible pour qu'on puisse comprendre ton projet.</p>
+          <div class="quiz-field">
+            <textarea id="quiz-objectifs" name="objectifs" rows="5" required aria-labelledby="quiz-objectifs-q"></textarea>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="3">
+          <p class="quiz-q" id="quiz-experience-q">As-tu déjà une expérience en vente, relation client ou administratif ?</p>
+          <div class="quiz-options" role="radiogroup" aria-labelledby="quiz-experience-q" aria-required="true">
+            <label class="quiz-option"><input type="radio" name="experience" value="Oui, une vraie expérience" required><i class="quiz-radio" aria-hidden="true"></i><span>Oui, une vraie expérience</span></label>
+            <label class="quiz-option"><input type="radio" name="experience" value="Un peu"><i class="quiz-radio" aria-hidden="true"></i><span>Un peu</span></label>
+            <label class="quiz-option"><input type="radio" name="experience" value="Aucune, je pars de zéro"><i class="quiz-radio" aria-hidden="true"></i><span>Aucune, je pars de zéro</span></label>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="4">
+          <p class="quiz-q" id="quiz-manque-q">Qu'est-ce qu'il te manque concrètement pour atteindre tes objectifs ? Du temps, un accompagnement, être aidée sur comment commencer…</p>
+          <div class="quiz-field">
+            <textarea id="quiz-manque" name="manque" rows="5" required aria-labelledby="quiz-manque-q"></textarea>
+          </div>
+          <p class="quiz-hint">l'idée c'est que tu sois précise. Ne bloque pas un appel avec moi "par curiosité", c'est important que tu aies déjà réfléchi à un projet à minima et à ce qu'il te manque pour le concrétiser 😌</p>
+        </div>
+
+        <div class="quiz-step" data-step="5">
+          <p class="quiz-q" id="quiz-demarrage-q">Tu veux démarrer...</p>
+          <div class="quiz-options" role="radiogroup" aria-labelledby="quiz-demarrage-q" aria-required="true">
+            <label class="quiz-option"><input type="radio" name="demarrage" value="Immédiatement" required><i class="quiz-radio" aria-hidden="true"></i><span>Immédiatement</span></label>
+            <label class="quiz-option"><input type="radio" name="demarrage" value="Dans le mois"><i class="quiz-radio" aria-hidden="true"></i><span>Dans le mois</span></label>
+            <label class="quiz-option"><input type="radio" name="demarrage" value="Dans les 3 mois"><i class="quiz-radio" aria-hidden="true"></i><span>Dans les 3 mois</span></label>
+            <label class="quiz-option"><input type="radio" name="demarrage" value="Je me renseigne encore (ne pas prendre l'appel - suis moi sur insta)"><i class="quiz-radio" aria-hidden="true"></i><span>Je me renseigne encore (ne pas prendre l'appel - suis moi sur insta)</span></label>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="6">
+          <p class="quiz-q" id="quiz-connaissance-q">Depuis quand tu me connais ?</p>
+          <div class="quiz-options" role="radiogroup" aria-labelledby="quiz-connaissance-q" aria-required="true">
+            <label class="quiz-option"><input type="radio" name="connaissance" value="Juste là après la publicité" required><i class="quiz-radio" aria-hidden="true"></i><span>Juste là après la publicité</span></label>
+            <label class="quiz-option"><input type="radio" name="connaissance" value="Je te suis déjà sur instagram"><i class="quiz-radio" aria-hidden="true"></i><span>Je te suis déjà sur instagram</span></label>
+          </div>
+        </div>
+
+        <div class="quiz-step" data-step="7">
+          <p class="quiz-q" id="quiz-presence-q">Page de présence</p>
+          <div class="quiz-options">
+            <label class="quiz-option quiz-option--check">
+              <input type="checkbox" name="presence" value="Je confirme que je serai présente et dans de bonnes conditions pour cet appel à l'heure convenue" required>
+              <i class="quiz-radio" aria-hidden="true"></i>
+              <span>Je confirme que je serai présente et dans de bonnes conditions pour cet appel à l'heure convenue</span>
+            </label>
+          </div>
+          <div class="quiz-context">
+            <p>⚠️ Si tu ne te présentes pas à l'appel sans prévenir et sans motif valable, tu seras automatiquement disqualifiée et tu ne pourras plus jamais réserver d'appel gratuit.</p>
+            <p>Pense donc à le noter dans ton agenda et accepter l'invitation Google.</p>
+            <p>Tu recevras également un message sur WhatsApp quelques jours avant pour confirmer ta présence.</p>
+            <p>🚨 Veille à y répondre pour que ton appel ne soit pas cédé à quelqu'un sur liste d'attente.</p>
+            <p>Rappel : Cet appel n'est PAS un coaching mais une discussion autour de tes objectifs pour déterminer si l'Académie des Ambitieuses est adapté pour toi.</p>
+          </div>
+        </div>
+
+        <p class="quiz-error" id="quiz-error" role="alert"></p>
+
+        <div class="quiz-nav">
+          <button type="button" class="quiz-back" id="quiz-back" hidden>← Retour</button>
+          <button type="button" class="btn btn-rose" id="quiz-next">Continuer →</button>
+          <button type="submit" class="btn btn-rose btn-quiz-submit" id="quiz-submit" hidden>Découvrir si le programme est fait pour moi</button>
+        </div>
+      </form>
+
+      <div id="calendly-step" hidden>
+        <div class="step2-intro fade-up in">
+          <span class="eyebrow">Étape suivante</span>
+          <p>Parfait. Réserve maintenant ton appel — 20 minutes, gratuit, sans engagement.</p>
+        </div>
+
+        <p class="cta-note">Si ton projet est prévu dans 6 mois ou plus, ou si tu n'es pas certaine de pouvoir honorer le rendez-vous, contacte-moi plutôt sur <a href="https://www.instagram.com/sarah.nmdsoul/" target="_blank" rel="noopener noreferrer">Instagram</a> afin que nous puissions continuer la discussion là-bas.</p>
+
+        <div class="reassurance-pills">
+          <span class="r-pill">✓ Appel gratuit</span>
+          <span class="r-pill">✓ 20 minutes</span>
+          <span class="r-pill">✓ Sans engagement</span>
+          <span class="r-pill">✓ Honnêteté totale</span>
+        </div>
+
+        <!-- Cadrage obligatoire, visible juste avant la réservation -->
+        <p class="notice" style="margin-bottom:14px;">
+          <strong>Cet appel concerne une formation à un métier du digital.</strong>
+          Il ne s'agit pas d'une candidature à un emploi : je te forme au setting et à l'assistanat
+          virtuel, je ne recrute pas et je ne garantis aucun placement.
+        </p>
+
+        <!-- Calendly embed -->
+        <div class="calendly-wrap" id="calendly">
+          <div class="calendly-inline-widget" data-url="https://calendly.com/academieamb-info/amb?hide_gdpr_banner=1" style="min-width:320px;height:1000px;"></div>
+        </div>
+
+        <div class="signature">
+          Je prends soin de chaque femme que j'accompagne. Places limitées à 10 par mois.
+          <em>— Sarah, fondatrice AMB Académie</em>
+        </div>
+
+        <p class="final-quote">
+          « Les femmes qui changent leur vie ne sont pas différentes de toi.<br>
+          Elles ont juste décidé d'arrêter d'attendre. »
+        </p>
+      </div>
+
+      <div id="insta-step" hidden>
+        <div class="step2-intro fade-up in">
+          <span class="eyebrow">On reste en contact</span>
+          <p>Merci pour tes réponses. Tu as choisi de te renseigner encore — suis-moi sur Instagram, on échangera quand tu seras prête.</p>
+        </div>
+
+        <p class="cta-note">Retrouve-moi ici : <a href="https://www.instagram.com/sarah.nmdsoul/" target="_blank" rel="noopener noreferrer">instagram.com/sarah.nmdsoul</a></p>
+
+        <div class="reassurance-pills">
+          <span class="r-pill">✓ Pas d'appel pour l'instant</span>
+          <span class="r-pill">✓ Contenu chaque semaine</span>
+          <span class="r-pill">✓ Reviens quand tu es prête</span>
+        </div>
+
+        <a class="btn btn-rose" href="https://www.instagram.com/sarah.nmdsoul/" target="_blank" rel="noopener noreferrer">Suis-moi sur Instagram →</a>
+
+        <div class="signature">
+          Je prends soin de chaque femme que j'accompagne. Places limitées à 10 par mois.
+          <em>— Sarah, fondatrice AMB Académie</em>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div>© 2025 AMB Académie — Les Ambitieuses</div>
+    <div class="footer-links">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+    </div>
+  </footer>
+
+  <!-- ══ CONSENT — bannière toujours présente, masquée par défaut ════════ -->
+  <div id="cookie-banner" role="dialog" aria-live="polite" aria-label="Consentement aux cookies" hidden>
+    <p>Nous utilisons des cookies pour mesurer l'audience et améliorer ton expérience.</p>
+    <div class="cb-actions">
+      <button type="button" id="cb-accept">Accepter</button>
+      <button type="button" id="cb-refuse">Refuser</button>
+    </div>
+  </div>
+
+  <script src="../amb-page.js" defer></script>
+  <script src="../amb-quiz.js" defer></script>
+</body>
+</html>
