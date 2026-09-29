@@ -1107,72 +1107,7 @@ footer a { color: var(--text-soft); text-decoration: underline; text-underline-o
 }
 @media (min-width: 640px) { .mech-grid { grid-template-columns: 1fr 1fr; } }
 
-/* ── Preuves (résultats individuels) ───────── */
-.proof-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
-.proof-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  padding: 18px 16px;
-  box-shadow: var(--shadow-sm);
-}
-.proof-card__who {
-  font-size: 13px; font-weight: 500; color: var(--text-dark);
-  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
-}
-.proof-card__period {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
-  text-transform: uppercase; color: var(--text-soft);
-  background: var(--beige); border-radius: var(--pill);
-  padding: 3px 9px; white-space: nowrap;
-}
-.proof-card__amount {
-  font-family: var(--font-title);
-  font-size: clamp(1.3rem, 5.5vw, 1.6rem);
-  font-weight: 600; color: var(--rose-dark);
-  line-height: 1.1; margin: 8px 0 2px;
-}
-.proof-card__kind {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.05em;
-  text-transform: uppercase; color: var(--rose);
-}
-.proof-card__ctx { font-size: 12.5px; color: var(--text-mid); line-height: 1.65; margin-top: 8px; }
-/* Emplacement réservé aux captures / témoignages : à remplir quand les
-   visuels et les autorisations écrites sont fournis. Rien n'est inventé ici. */
-.proof-slot {
-  border: 1px dashed rgba(158,142,132,0.5);
-  border-radius: 12px;
-  background: repeating-linear-gradient(45deg, transparent, transparent 9px, rgba(158,142,132,0.06) 9px, rgba(158,142,132,0.06) 18px);
-  padding: 20px 16px;
-  margin-top: 12px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--text-soft);
-  line-height: 1.65;
-}
-.proof-slot b { display: block; color: var(--text-mid); font-weight: 500; margin-bottom: 4px; }
-@media (min-width: 640px) { .proof-grid { grid-template-columns: repeat(3, 1fr); } }
 
-/* ── Ce que contient l'Académie ────────────── */
-.incl-list { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 20px; }
-.incl-item {
-  display: flex; gap: 11px; align-items: flex-start;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 13px 14px;
-  box-shadow: var(--shadow-sm);
-}
-.incl-check {
-  width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px;
-  border-radius: 50%; background: var(--rose-light);
-  border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-}
-.incl-check svg { width: 11px; height: 11px; color: var(--rose); }
-.incl-item p { font-size: 13px; color: var(--text-mid); line-height: 1.6; }
-.incl-item b { color: var(--text-dark); font-weight: 500; }
-@media (min-width: 640px) { .incl-list { grid-template-columns: 1fr 1fr; } }
 
 /* ── Notices honnêteté / cadrage ───────────── */
 .notice {
@@ -1233,13 +1168,6 @@ footer a { color: var(--text-soft); text-decoration: underline; text-underline-o
 /* ═══════════════════════════════════════════
    TÉMOIGNAGES — captures de messages
 ═══════════════════════════════════════════ */
-.proof-shots-title {
-  font-family: var(--font-title);
-  font-size: clamp(1.15rem, 4.2vw, 1.4rem);
-  font-weight: 500;
-  margin: 34px 0 4px;
-}
-.proof-shots-lead { font-size: 13px; color: var(--text-mid); line-height: 1.65; }
 .proof-shots { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 18px; }
 .proof-shot {
   background: var(--white);
