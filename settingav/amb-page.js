@@ -82,6 +82,65 @@
     });
   });
 
+  // ── VISIONNEUSE DE CAPTURES ─────────────────────────────────────────
+  // Les captures de témoignages sont trop denses en texte pour être lues à la
+  // taille d'une carte sur mobile. Amélioration progressive : sans JS, le lien
+  // ouvre simplement l'image. Fermeture au clic hors image, sur la croix, ou
+  // avec Échap ; le focus revient sur la vignette d'origine.
+  (function () {
+    var triggers = document.querySelectorAll('a[data-lightbox]');
+    if (!triggers.length) return;
+    var box = null, opener = null;
+
+    function close() {
+      if (!box) return;
+      box.remove();
+      box = null;
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKey);
+      if (opener) { opener.focus(); opener = null; }
+    }
+    function onKey(e) { if (e.key === 'Escape' || e.key === 'Esc') close(); }
+
+    function open(href, alt, from) {
+      close();
+      opener = from;
+      box = document.createElement('div');
+      box.className = 'shot-lb';
+      box.setAttribute('role', 'dialog');
+      box.setAttribute('aria-modal', 'true');
+      box.setAttribute('aria-label', alt || 'Capture agrandie');
+
+      var img = document.createElement('img');
+      img.src = href;
+      img.alt = alt || '';
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'shot-lb__close';
+      btn.setAttribute('aria-label', 'Fermer');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+      box.appendChild(img);
+      box.appendChild(btn);
+      box.addEventListener('click', function (e) { if (e.target === box) close(); });
+      btn.addEventListener('click', close);
+      document.body.appendChild(box);
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', onKey);
+      btn.focus();
+    }
+
+    triggers.forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;   // laisse « ouvrir dans un onglet »
+        e.preventDefault();
+        var img = a.querySelector('img');
+        open(a.getAttribute('href'), img && img.alt, a);
+      });
+    });
+  })();
+
   // ── CTA « Réserver mon appel » → intention de réservation ───────────
   // Le clic quitte la page 1 pour la page 2 ; l'écouteur générique de
   // amb-track.js ne couvre que les liens #calendly / #quiz / calendly.com.
