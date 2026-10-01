@@ -1086,6 +1086,20 @@ footer a { color: var(--text-soft); text-decoration: underline; text-underline-o
     var(--cream);
   padding-block: 56px;
 }
+.h2--final {
+  text-align: center;
+  font-size: clamp(1.1rem, 4vw, 1.45rem);
+  font-weight: 500;
+  line-height: 1.35;
+}
+.h2-lead {
+  display: block;
+  font-weight: 700;
+  color: var(--rose);
+  font-size: clamp(1.25rem, 4.8vw, 1.7rem);
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
 
 .mech-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 20px; }
 .mech-card {
